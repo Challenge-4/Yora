@@ -1,0 +1,67 @@
+name: local_media_hub
+description: "Yora — lecteur de musique de bureau (Windows, macOS, Linux) : bibliothèque locale + YouTube Music via yt-dlp."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.13.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+  desktop_drop: ^0.5.0
+  cross_file: ^0.3.5
+  shared_preferences: ^2.2.2
+  file_picker: ^8.0.0
+  media_kit: ^1.1.10
+  media_kit_libs_video: ^1.0.4
+  http: ^1.2.0
+
+  cupertino_icons: ^1.0.8
+  window_manager: ^0.5.2
+  screen_retriever: ^0.2.2
+  windows_taskbar: ^1.1.2
+  tray_manager: ^0.5.3
+  image: ^4.9.2
+  launch_at_startup: ^0.5.1
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
+  dart_discord_presence: ^1.2.0
+  hotkey_manager: ^0.2.3
+  audio_service: ^0.18.19
+  audio_session: ^0.2.4
+  audio_service_mpris: ^0.2.1
+  youtube_explode_dart: ^3.1.0
+  path_provider: ^2.1.6
+  connectivity_plus: ^7.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  generate: true
+
+  uses-material-design: true
+
+  assets:
+    - assets/app_icon.ico
+    - assets/app_icon.png
+    - assets/taskbar_icons/previous.ico
+    - assets/taskbar_icons/play.ico
+    - assets/taskbar_icons/pause.ico
+    - assets/taskbar_icons/next.ico
+    - assets/taskbar_icons/heart_filled.ico
+    - assets/taskbar_icons/heart_outline.ico
+    - assets/genres/
+
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
