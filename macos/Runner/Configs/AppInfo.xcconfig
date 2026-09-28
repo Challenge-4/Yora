@@ -1,0 +1,5 @@
+PRODUCT_NAME = Yora
+
+PRODUCT_BUNDLE_IDENTIFIER = com.yora.app
+
+PRODUCT_COPYRIGHT = Copyright © 2026 Yora. All rights reserved.
