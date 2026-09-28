@@ -1,0 +1,456 @@
+{
+  "@@locale": "fr",
+
+  "settingsCategoryThemes": "Thèmes",
+  "settingsCategoryDownloads": "Téléchargements",
+  "settingsCategoryGeneral": "Paramètres",
+
+  "defaultUserName": "Utilisateur",
+  "cancelButton": "Annuler",
+  "saveButton": "Enregistrer",
+
+  "openFolderTooltip": "Ouvrir le dossier",
+  "changeFolderButton": "Changer de dossier",
+  "resetButton": "Réinitialiser",
+  "defaultValueSuffix": "{value} (par défaut)",
+  "@defaultValueSuffix": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "downloadFolderTitle": "Dossier de téléchargement (Titres locaux)",
+  "showDownloadButtonsTitle": "Boutons de téléchargement",
+  "showDownloadButtonsSubtitle": "Affiche le bouton pour télécharger un titre en ligne (ou toute une playlist) en fichier local permanent.",
+  "cacheFolderTitle": "Dossier de cache (Titres en ligne)",
+
+  "mainThemeGroupTitle": "Thème principal",
+  "accentColorGroupTitle": "Couleur d'accent",
+  "customThemeLabel": "Perso",
+  "imageThemeLabel": "Image",
+  "customAccentTooltip": "Couleur personnalisée",
+
+  "playbackGroupTitle": "Lecture",
+  "resumeOnStartupTitle": "Reprendre la lecture au démarrage",
+  "resumeOnStartupSubtitle": "Relance automatiquement la dernière piste et la file en cours à l'ouverture de l'application.",
+  "crossfadeTitle": "Fondu enchaîné",
+  "crossfadeSubtitle": "Baisse doucement le volume en fin de piste avant de passer à la suivante (jamais lors d'un changement manuel).",
+  "smoothPlaylistTransitionsTitle": "Transitions fluides entre playlists",
+  "smoothPlaylistTransitionsSubtitle": "Quand une playlist se termine, enchaîne automatiquement sur la suivante dans la barre latérale.",
+
+  "systemGroupTitle": "Système",
+  "minimizeToTrayTitle": "Réduire dans la zone de notification en fermant la fenêtre",
+  "minimizeToTraySubtitle": "La croix de fermeture cache la fenêtre au lieu de quitter Yora, la musique continue de jouer. \"Quitter Yora\" depuis l'icône ferme vraiment l'application.",
+  "launchAtStartupTitle": "Ouvrir Yora automatiquement au démarrage",
+  "launchAtStartupSubtitle": "Lance Yora automatiquement au lancement du système.",
+
+  "languageGroupTitle": "Langue",
+  "languageSystemOption": "Système (par défaut)",
+  "languageFrenchOption": "Français",
+  "languageEnglishOption": "English",
+  "languageRestartNote": "Choisissez une langue : les changements seront appliqués après le redémarrage de l'application.",
+
+  "createPlaylistTitle": "Créer une playlist",
+  "importPlaylistTitle": "Importer une playlist",
+  "importUrlHint": "Lien YouTube, Deezer ou Spotify de la playlist",
+  "importUrlHelperText": "L'import peut durer en fonction du nombre de titres à l'intérieur.",
+  "importUrlRateLimitHelperText": "Un import massif peut parfois bloquer temporairement les téléchargements.",
+  "playlistNameHint": "Nom de la playlist",
+  "backButton": "Retour",
+  "importButton": "Importer",
+  "createButton": "Créer",
+
+  "editPlaylistTitle": "Modifier les informations",
+  "nameHint": "Nom",
+  "playlistDescriptionHint": "Ajoutez une description facultative",
+  "playlistNameAlreadyTakenError": "Une playlist porte déjà ce nom",
+  "saveChangesButton": "Sauvegarder",
+
+  "addToPlaylistLabel": "Ajouter à la playlist",
+  "newPlaylistLabel": "Nouvelle playlist",
+  "addToQueueLabel": "Ajouter à la file d'attente",
+  "removeFromPlaylistLabel": "Supprimer de cette playlist",
+  "viewArtistMenuLabel": "Voir l'artiste",
+
+  "sortByMenuTitle": "Trier par",
+  "sortByCustomOption": "Tri personnalisé",
+  "sortByTitleOption": "Titre",
+  "sortByArtistOption": "Artiste",
+  "sortByAlbumOption": "Album",
+  "sortByRecentlyAddedOption": "Ajoutés récemment",
+  "sortByReleaseDateOption": "Date de sortie",
+  "sortByDurationOption": "Durée",
+
+  "publicPlaylistLabel": "Playlist publique",
+  "pauseTooltip": "Mettre en pause",
+  "playTooltip": "Lecture",
+  "downloadPlaylistTooltip": "Télécharger toute la playlist en local",
+  "searchTitleOrArtistHint": "Titre ou artiste",
+  "searchInPlaylistTooltip": "Rechercher dans la playlist",
+  "searchToAddPlaylistTitle": "Ajouter à {playlist}",
+  "@searchToAddPlaylistTitle": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "addButtonLabel": "Ajouter",
+  "editInfoButtonLabel": "Nom et informations",
+
+  "trackCount": "{count, plural, one{{count} titre} other{{count} titres}}",
+  "@trackCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "emptyPlaylistMessage": "Cette playlist est vide. Ajoutez des musiques depuis l'onglet Music ou le bouton ci-dessus.",
+  "noSearchResultsInPlaylistMessage": "Aucun titre ne correspond à votre recherche.",
+
+  "downloadSelectionTooltip": "Télécharger la sélection en local",
+  "downloadTrackTooltip": "Télécharger en local",
+  "queuePanelTooltip": "File d'attente",
+
+  "queueTabLabel": "File d'attente",
+  "recentlyPlayedTabLabel": "Écoutés récemment",
+  "nothingPlayingMessage": "Rien en cours de lecture.",
+  "currentlyPlayingSectionLabel": "Titre en cours de lecture",
+  "upNextInCustomQueueLabel": "À suivre dans la file d'attente",
+  "upNextInPlaylistLabel": "À suivre dans : {playlist}",
+  "@upNextInPlaylistLabel": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "upNextLabel": "À suivre",
+  "clearQueueButtonLabel": "Vider la file",
+  "nothingRecentlyPlayedMessage": "Rien d'écouté récemment.",
+  "removeFromQueueTooltip": "Retirer de la file d'attente",
+
+  "homeNavLabel": "Accueil",
+  "exploreNavLabel": "Explorer",
+  "playlistsHeaderLabel": "PLAYLISTS",
+  "noPlaylistsMessage": "Aucune playlist",
+  "deleteButton": "Supprimer",
+  "importInProgressLabel": "Import en cours…",
+  "importAlreadyInProgressToast": "Un import est déjà en cours, réessaie une fois qu'il sera terminé.",
+
+  "emptyHomeMessage": "Rien à afficher pour l'instant, commence à écouter ou ajouter des titres.",
+  "playlistsSectionTitle": "Playlists",
+  "recentAdditionsSectionTitle": "Ajouts récents",
+  "recentlyPlayedSectionTitle": "Écouté récemment",
+
+  "top100InCountryLabel": "Top 100 · {country}",
+  "@top100InCountryLabel": {
+    "placeholders": {
+      "country": { "type": "String" }
+    }
+  },
+  "topByCountryTitle": "Top par pays",
+  "genresTitle": "Genres",
+  "unavailableLabel": "Indisponible",
+  "artistNotFoundMessage": "Artiste non identifiable",
+  "chooseCountryLabel": "Choisir un pays",
+  "selectCountryLabel": "Sélectionner un pays",
+  "genresUnavailableMessage": "Genres indisponibles pour le moment.",
+  "newReleasesTitle": "Nouveautés",
+  "moreButtonLabel": "Plus",
+  "newReleasesUnavailableMessage": "Nouveautés indisponibles pour le moment.",
+  "noTracksForChartMessage": "Aucun titre pour ce classement.",
+  "topSongsLabel": "Titres populaires",
+  "albumsLabel": "Albums",
+  "singlesAndEpsLabel": "Singles et EP",
+
+  "searchOnlineHint": "Rechercher un titre...",
+
+  "noResultsLabel": "Aucun résultat",
+
+  "appMenuTooltip": "Menu",
+  "fileMenuLabel": "Fichier",
+  "editMenuLabel": "Modifier",
+  "viewMenuLabel": "Afficher",
+  "playbackMenuLabel": "Lecture",
+  "helpMenuLabel": "Aide",
+  "undoMenuItem": "Annuler",
+  "redoMenuItem": "Rétablir",
+  "cutMenuItem": "Couper",
+  "copyMenuItem": "Copier",
+  "pasteMenuItem": "Coller",
+  "selectAllMenuItem": "Tout sélectionner",
+  "searchMenuItem": "Recherche",
+  "filterMenuItem": "Filtre",
+  "preferencesMenuItem": "Préférences",
+  "zoomInMenuItem": "Zoom avant",
+  "zoomOutMenuItem": "Zoom arrière",
+  "resetZoomMenuItem": "Réinitialiser le zoom",
+  "playMenuItem": "Lire",
+  "spaceKeyLabel": "Espace",
+  "nextMenuItem": "Suivant",
+  "previousMenuItem": "Précédent",
+  "seekForwardMenuItem": "Avancer",
+  "seekBackwardMenuItem": "Reculer",
+  "shuffleMenuItem": "Lecture aléatoire",
+  "repeatMenuItem": "Répéter",
+  "volumeUpMenuItem": "Augmenter le volume",
+  "volumeDownMenuItem": "Baisser le volume",
+  "aboutMenuItem": "À propos de Yora",
+  "settingsCategoryAbout": "À propos",
+  "versionLabel": "Version {version}",
+  "@versionLabel": {
+    "placeholders": {
+      "version": { "type": "String" }
+    }
+  },
+  "reportIssueLabel": "Signaler un problème",
+  "licenseGroupTitle": "Licence",
+  "licenseDescription": "Yora est un logiciel libre sous licence GPL-3.0 : toute copie ou version modifiée doit rester libre, avec son code source publié. Le nom et le logo Yora sont réservés.",
+  "affiliationDisclaimer": "Yora n'est affilié ni à YouTube, ni à Spotify, ni à Deezer, ni à Discord.",
+  "uninstallMenuItem": "Désinstaller Yora…",
+
+  "repairedTracksToast": "{count, plural, one{1 titre réparé} other{{count} titres réparés}}",
+  "@repairedTracksToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "allTracksAlreadyDownloadedToast": "Tous les titres de cette playlist sont déjà téléchargés.",
+  "downloadPlaylistConfirmTitle": "Télécharger la playlist ?",
+  "downloadPlaylistConfirmContent": "{count, plural, one{{count} titre à télécharger en local.} other{{count} titres à télécharger en local.}}\nSelon leur nombre et ta connexion, cela peut prendre du temps.",
+  "downloadButtonLabel": "Télécharger",
+
+  "alreadyInPlaylistToast": "Déjà dans \"{playlist}\"",
+  "@alreadyInPlaylistToast": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "addedToPlaylistToast": "Ajouté à \"{playlist}\"",
+  "@addedToPlaylistToast": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "removedFromPlaylistToast": "Retiré de \"{playlist}\"",
+  "@removedFromPlaylistToast": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "tracksRemovedFromPlaylistToast": "{count, plural, one{Titre supprimé de la playlist} other{{count} titres supprimés de la playlist}}",
+  "@tracksRemovedFromPlaylistToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "deletePlaylistConfirmTitle": "Supprimer la playlist ?",
+  "deletePlaylistConfirmContent": "Êtes-vous sûr de vouloir supprimer la playlist \"{playlist}\" ? Cette action est irréversible.",
+  "@deletePlaylistConfirmContent": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "deletePlaylistButtonLabel": "Supprimer la playlist",
+  "playlistDeletedToast": "Playlist \"{playlist}\" supprimée",
+  "@playlistDeletedToast": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+
+  "removeFromLikedTooltip": "Retirer des titres likés",
+  "addToLikedTooltip": "Ajouter aux titres likés",
+  "previousTooltip": "Précédent",
+  "nextTooltip": "Suivant",
+
+  "downloadingPlaylistProgressToast": "Téléchargement de la playlist... {completed}/{total}",
+  "@downloadingPlaylistProgressToast": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "playlistFullyDownloadedToast": "{count, plural, one{Playlist entièrement téléchargée (1 titre).} other{Playlist entièrement téléchargée ({count} titres).}}",
+  "@playlistFullyDownloadedToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "tracksDownloadedWithFailuresToast": "{completed} titre(s) téléchargé(s), {failed} échec(s).",
+  "@tracksDownloadedWithFailuresToast": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "failed": { "type": "int" }
+    }
+  },
+  "downloadedTrackToast": "Titre téléchargé en local",
+  "downloadFailedToast": "Échec du téléchargement",
+  "selectedTracksAlreadyDownloadedToast": "Les titres sélectionnés sont déjà téléchargés.",
+  "downloadingTracksProgressToast": "Téléchargement de {total} titre(s)... {completed}/{total}",
+  "@downloadingTracksProgressToast": {
+    "placeholders": {
+      "completed": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "tracksDownloadedToast": "{count, plural, one{1 titre téléchargé.} other{{count} titres téléchargés.}}",
+  "@tracksDownloadedToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "previewUnavailableError": "Impossible de charger cet aperçu (vidéo indisponible ou hors ligne).",
+  "trackNoLongerAvailableError": "Cette piste n'est plus disponible (titre supprimé ou rendu privé par son créateur).",
+  "onlineTrackUnavailableError": "Impossible de lire ce titre (vidéo indisponible ou hors ligne).",
+  "unavailableTrackSkippedToast": "Titre indisponible, passage au suivant.",
+  "trackPlaybackError": "Impossible de lire ce titre.",
+  "tracksAddedToQueueToast": "{count, plural, one{Ajouté à la file d'attente} other{{count} titres ajoutés à la file d'attente}}",
+  "@tracksAddedToQueueToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "restoredTracksToast": "{count, plural, one{Titre restauré} other{{count} titres restaurés}}",
+  "@restoredTracksToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "playlistRestoredToast": "Playlist \"{playlist}\" restaurée",
+  "@playlistRestoredToast": {
+    "placeholders": {
+      "playlist": { "type": "String" }
+    }
+  },
+  "copiedTracksToast": "{count, plural, one{Titre copié} other{{count} titres copiés}}",
+  "@copiedTracksToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "cutTracksToast": "{count, plural, one{Titre coupé} other{{count} titres coupés}}",
+  "@cutTracksToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "pastedTracksToast": "{count, plural, one{Titre collé} other{{count} titres collés}}",
+  "@pastedTracksToast": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "alreadyInThisPlaylistToast": "Déjà présent dans cette playlist",
+  "localFilesReadOnlyToast": "Impossible d'ajouter des titres ici : seuls les fichiers téléchargés en local y figurent.",
+
+  "importInProgressWithSuffixLabel": "Import en cours… ({suffix})",
+  "@importInProgressWithSuffixLabel": {
+    "placeholders": {
+      "suffix": { "type": "int" }
+    }
+  },
+  "importedPlaylistDefaultName": "Playlist importée",
+  "noTrackFoundForPlaylistError": "Aucune piste n'a pu être retrouvée pour cette playlist.",
+  "importFailedToast": "Échec de l'import : {error}",
+  "@importFailedToast": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+
+  "chooseButtonLabel": "Choisir",
+  "selectPhotoLabel": "Sélectionner une photo",
+  "editPhotoLabel": "Modifier la photo",
+  "removePhotoLabel": "Supprimer la photo",
+
+  "previewFallbackTitle": "Aperçu",
+  "previewFallbackAuthor": "Aperçu YouTube",
+  "localAudioLabel": "Local Audio",
+  "justNowLabel": "à l'instant",
+  "hoursAgoLabel": "{count, plural, one{il y a {count} heure} other{il y a {count} heures}}",
+  "@hoursAgoLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgoLabel": "{count, plural, one{il y a {count} jour} other{il y a {count} jours}}",
+  "@daysAgoLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "weeksAgoLabel": "{count, plural, one{il y a {count} semaine} other{il y a {count} semaines}}",
+  "@weeksAgoLabel": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "quitAppTrayLabel": "Quitter Yora",
+  "searchTabLabel": "Rechercher",
+  "libraryTabLabel": "Bibliothèque",
+  "nowPlayingTitle": "Lecture en cours",
+  "profileTabLabel": "Profil",
+  "searchLibraryHint": "Rechercher dans la bibliothèque",
+  "libraryTracksSectionTitle": "Titres",
+  "checkForUpdatesTrayLabel": "Vérifier les mises à jour",
+  "choosePhotoLabel": "Choisir une photo",
+
+  "likedTracksPlaylistName": "Titres likés",
+  "localFilesPlaylistName": "Fichiers locaux",
+
+  "settingsCategoryDataAndSecurity": "Données et sécurité",
+  "dataBackupGroupTitle": "Sauvegarde",
+  "dataBackupDescription": "Sauvegarde tes playlists, titres likés, thème et paramètres dans un fichier.",
+  "exportDataButtonLabel": "Exporter mes données",
+  "importDataButtonLabel": "Importer des données",
+  "exportSuccessMessage": "Données exportées : {path}",
+  "@exportSuccessMessage": {
+    "placeholders": {
+      "path": { "type": "String" }
+    }
+  },
+  "exportSuccessMessageGeneric": "Données exportées.",
+  "importSuccessMessage": "Import réussi ! Tes données ont été chargées.",
+  "importInvalidFileMessage": "Fichier invalide ou corrompu.",
+  "importErrorMessage": "Impossible d'importer ce fichier.",
+  "exportErrorMessage": "Impossible d'exporter les données.",
+  "lastBackupLabel": "Dernière sauvegarde : {date}",
+  "@lastBackupLabel": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "noBackupYetLabel": "Aucune sauvegarde pour l'instant",
+  "backupReminderMessage": "Pense à exporter tes données régulièrement : c'est le seul moyen de retrouver tes playlists après une réinstallation ou sur un autre appareil.",
+
+  "wifiOnlyDownloadsTitle": "Télécharger uniquement en Wi-Fi",
+  "wifiOnlyDownloadsSubtitle": "Les téléchargements et la mise en cache automatique attendent le Wi-Fi, pour ne pas consommer ton forfait. L'écoute reste possible partout.",
+  "wifiRequiredForDownloadToast": "Pas de Wi-Fi : les téléchargements sont désactivés sur les données mobiles.",
+  "storageUsageGroupTitle": "Espace utilisé",
+  "downloadedTracksStorageLabel": "Titres téléchargés",
+  "cacheStorageLabel": "Cache des titres en ligne",
+  "storageSizeGb": "{size} Go",
+  "@storageSizeGb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "storageSizeMb": "{size} Mo",
+  "@storageSizeMb": {
+    "placeholders": {
+      "size": { "type": "String" }
+    }
+  },
+  "clearCacheButtonLabel": "Vider le cache des titres en ligne",
+  "clearCacheSubtitle": "Action irréversible et déconseillée : supprime tous les titres en ligne mis en cache, qui devront tous être re-téléchargés.\nÀ n'utiliser que pour repartir de zéro.",
+  "clearCacheConfirmTitle": "Vider le cache des titres en ligne ?",
+  "clearCacheConfirmMessage": "Cette action est irréversible et n'est pas conseillée, sauf pour repartir de zéro.\nTous les titres en ligne mis en cache seront supprimés et devront être re-téléchargés (à l'écoute ou au prochain lancement).\nTes playlists et tes titres téléchargés ne sont pas touchés.",
+  "clearCacheConfirmButton": "Vider quand même",
+  "cacheClearedMessage": "Cache vidé.",
+
+  "githubTooltip": "Voir sur GitHub",
+
+  "discordRichPresenceTitle": "Rich Presence Discord",
+  "discordRichPresenceSubtitle": "Affiche le titre en cours d'écoute sur ton profil Discord. (Lance l'application en administrateur si la connexion échoue)"
+}
