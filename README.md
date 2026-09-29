@@ -3,7 +3,7 @@
 
 # Yora
 
-A cross-platform music player that brings your local library and online music together in one place.<br>
+A free cross-platform music player that brings your local library and online music together in one place.<br>
 Search, stream, download and organize your music. No account, no ads, no server: everything stays on your device.
 
 <a href="https://www.patreon.com/cw/Challenge4"><img alt="Support me on Patreon" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/patreon-singular_vector.svg"></a>
