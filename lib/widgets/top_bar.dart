@@ -56,7 +56,7 @@ class TopBar extends StatelessWidget {
           ),
           if (isDesktop) const Positioned.fill(child: DragToMoveArea(child: SizedBox.expand())),
           Positioned(
-            left: Platform.isMacOS ? 88 : 24,
+            left: Platform.isMacOS ? 100 : 24,
             top: 0,
             bottom: 0,
             child: Center(

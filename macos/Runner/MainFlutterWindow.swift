@@ -2,6 +2,13 @@ import Cocoa
 import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
+  private let trafficLightsLeft: CGFloat = 20
+  private let topBarHeight: CGFloat = 80
+
+  override var styleMask: NSWindow.StyleMask {
+    didSet { scheduleTrafficLightsLayout() }
+  }
+
   override func awakeFromNib() {
     let flutterViewController = FlutterViewController()
     let windowFrame = self.frame
@@ -12,6 +19,49 @@ class MainFlutterWindow: NSWindow {
     registerLaunchAtStartupChannel(messenger: flutterViewController.engine.binaryMessenger)
 
     super.awakeFromNib()
+
+    let notifications: [NSNotification.Name] = [
+      NSWindow.didResizeNotification,
+      NSWindow.didEndLiveResizeNotification,
+      NSWindow.didExitFullScreenNotification,
+      NSWindow.didBecomeKeyNotification,
+      NSWindow.didBecomeMainNotification,
+    ]
+    for name in notifications {
+      NotificationCenter.default.addObserver(
+        self, selector: #selector(windowLayoutChanged), name: name, object: self)
+    }
+    scheduleTrafficLightsLayout()
+  }
+
+  @objc private func windowLayoutChanged() {
+    positionTrafficLights()
+  }
+
+  private func scheduleTrafficLightsLayout() {
+    DispatchQueue.main.async { [weak self] in self?.positionTrafficLights() }
+  }
+
+  private func positionTrafficLights() {
+    guard !styleMask.contains(.fullScreen),
+      let close = standardWindowButton(.closeButton),
+      let miniaturize = standardWindowButton(.miniaturizeButton),
+      let zoom = standardWindowButton(.zoomButton),
+      let container = close.superview?.superview
+    else { return }
+
+    let spacing = miniaturize.frame.minX - close.frame.minX
+    let buttonsWidth = spacing * 2 + zoom.frame.width
+    container.frame = NSRect(
+      x: 0,
+      y: frame.height - topBarHeight,
+      width: trafficLightsLeft * 2 + buttonsWidth,
+      height: topBarHeight)
+
+    let y = (topBarHeight - close.frame.height) / 2
+    for (index, button) in [close, miniaturize, zoom].enumerated() {
+      button.setFrameOrigin(NSPoint(x: trafficLightsLeft + CGFloat(index) * spacing, y: y))
+    }
   }
 
   private func registerLaunchAtStartupChannel(messenger: FlutterBinaryMessenger) {
