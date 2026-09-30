@@ -294,6 +294,13 @@ jobs:
       - run: flutter pub get
       - run: flutter build apk --release
       - run: mv build/app/outputs/flutter-apk/app-release.apk yora-android.apk
+      - name: Libérer de l'espace disque
+        run: |
+          df -h /
+          rm -rf build
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/powershell /usr/local/lib/node_modules
+          sudo docker image prune --all --force > /dev/null 2>&1 || true
+          df -h /
       - name: Activer KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
