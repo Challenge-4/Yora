@@ -51,11 +51,10 @@ class MainFlutterWindow: NSWindow {
     else { return }
 
     let spacing = miniaturize.frame.minX - close.frame.minX
-    let buttonsWidth = spacing * 2 + zoom.frame.width
     container.frame = NSRect(
       x: 0,
       y: frame.height - topBarHeight,
-      width: trafficLightsLeft * 2 + buttonsWidth,
+      width: frame.width,
       height: topBarHeight)
 
     let y = (topBarHeight - close.frame.height) / 2
