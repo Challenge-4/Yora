@@ -82,11 +82,28 @@ class HomeView extends StatelessWidget {
     final topPlaylists = _topPlaylists();
     final titleSize = isMobile ? 22.0 : 20.0;
     final sectionGap = isMobile ? 32.0 : 56.0;
-    if (recentlyPlayed.isEmpty && recentAdditions.isEmpty && topPlaylists.isEmpty) {
-      return Center(
-        child: Text(
-          AppLocalizations.of(context).emptyHomeMessage,
-          style: TextStyle(color: palette.textSecondary),
+    final hasContent = recentlyPlayed.isNotEmpty ||
+        recentAdditions.isNotEmpty ||
+        topPlaylists.any((name) => library.musicPlaylists[name]?['isLiked'] != true);
+    if (!hasContent) {
+      final emptyMessage = Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Text(
+            AppLocalizations.of(context).emptyHomeMessage,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: palette.textSecondary),
+          ),
+        ),
+      );
+      if (topPlaylists.isEmpty) return emptyMessage;
+      return Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Column(
+          children: [
+            _buildPlaylistGrid(topPlaylists),
+            Expanded(child: emptyMessage),
+          ],
         ),
       );
     }

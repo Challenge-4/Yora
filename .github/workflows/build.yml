@@ -315,12 +315,15 @@ jobs:
           disable-animations: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot
           script: |
+            sleep 30
             adb install -r yora-android.apk
             adb shell pm grant com.yora.app android.permission.POST_NOTIFICATIONS || true
-            adb shell monkey -p com.yora.app -c android.intent.category.LAUNCHER 1
+            adb logcat -c || true
+            adb shell am start -W -n com.yora.app/.MainActivity
             sleep 45
             adb exec-out screencap -p > yora-startup-android.png
-            adb logcat -d -t 400 > yora-startup-android.log || true
+            adb logcat -d > yora-startup-android.log || true
+            adb logcat -d -b crash > yora-startup-android-crash.log || true
             adb shell pidof com.yora.app
       - uses: actions/upload-artifact@v7
         if: always()
@@ -329,6 +332,7 @@ jobs:
           path: |
             yora-startup-android.png
             yora-startup-android.log
+            yora-startup-android-crash.log
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v7
         with:
