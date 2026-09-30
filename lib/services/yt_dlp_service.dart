@@ -47,6 +47,8 @@ class YtDlpService implements YoutubeBackend {
   String? _ffprobePathCache;
 
   Future<String?> _locateBinary(String name, {String? wingetPackageHint}) async {
+    final bundled = _bundledBinaryPath(name);
+    if (bundled != null) return bundled;
     try {
       final result = await Process.run(Platform.isWindows ? 'where' : 'which', [name]);
       if (result.exitCode == 0) {
@@ -57,8 +59,6 @@ class YtDlpService implements YoutubeBackend {
         if (path.isNotEmpty) return path;
       }
     } catch (_) {}
-    final bundled = _bundledBinaryPath(name);
-    if (bundled != null) return bundled;
     final home = homeDirectory;
     if (Platform.isWindows) {
       if (home == null) return null;
@@ -101,6 +101,8 @@ class YtDlpService implements YoutubeBackend {
   Future<String> resolveYtDlpPath() async {
     final cached = _ytDlpPathCache;
     if (cached != null) return cached;
+    final bundled = _bundledBinaryPath('yt-dlp');
+    if (bundled != null) return _ytDlpPathCache = bundled;
     try {
       final result = await Process.run('yt-dlp', ['--version']);
       if (result.exitCode == 0) {
