@@ -637,6 +637,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   @override
   void onTrayIconRightMouseDown() {
+    if (Platform.isLinux) return;
     unawaited(const MethodChannel('tray_manager').invokeMethod('popUpContextMenu', {'bringAppToFront': true}));
   }
 
@@ -644,7 +645,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     tray.trayManager.addListener(this);
     try {
       await tray.trayManager.setIcon(Platform.isWindows ? 'assets/app_icon.ico' : 'assets/app_icon.png');
-      await tray.trayManager.setToolTip('Yora');
+      if (!Platform.isLinux) await tray.trayManager.setToolTip('Yora');
       await tray.trayManager.setContextMenu(
         tray.Menu(
           items: [
