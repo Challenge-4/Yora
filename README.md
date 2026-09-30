@@ -75,7 +75,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-linux-x64.tar.gz">
         <img width="220" alt="Download for Linux" src="assets/branding/buttons/linux.png">
       </a>
-      <p>Then open a terminal in your Downloads folder and run: <code>tar -xzf yora-linux-x64.tar.gz && cd yora && ./install.sh</code></p>
+      <p>Then open a terminal in your Downloads folder and run:<br><code>tar -xzf yora-linux-x64.tar.gz && cd yora && ./install.sh</code></p>
     </td>
   </tr>
   <tr>
