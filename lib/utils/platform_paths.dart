@@ -33,17 +33,26 @@ Future<void> initMobilePaths() async {
 }
 
 String? _iosContainerPath;
-const String _iosContainerKey = 'iosContainerPath';
+final RegExp _iosContainerPattern = RegExp(r'(?:/private)?/var/mobile/Containers/Data/Application/[0-9A-Fa-f-]{36}');
+
+String relocateIosContainerPath(String value, String currentContainer) =>
+    value.replaceAll(_iosContainerPattern, currentContainer);
 
 Future<void> relocateIosContainerPaths() async {
   final current = _iosContainerPath;
   if (current == null) return;
   final prefs = await SharedPreferences.getInstance();
-  final previous = prefs.getString(_iosContainerKey);
-  if (previous != null && previous != current) {
-    await _replacePathPrefixInPrefs(previous, current);
+  for (final key in prefs.getKeys()) {
+    final value = prefs.get(key);
+    if (value is String) {
+      final updated = relocateIosContainerPath(value, current);
+      if (updated != value) await prefs.setString(key, updated);
+    } else if (value is List) {
+      final list = value.cast<String>();
+      final updated = [for (final s in list) relocateIosContainerPath(s, current)];
+      if (updated.join('\u0000') != list.join('\u0000')) await prefs.setStringList(key, updated);
+    }
   }
-  await prefs.setString(_iosContainerKey, current);
 }
 
 Future<void> rewriteLegacyAndroidDownloadPaths() async {
