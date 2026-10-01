@@ -3,9 +3,10 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'image_store.dart';
 import 'platform_paths.dart';
 
-const int _kBackupFormatVersion = 1;
+const int _kBackupFormatVersion = 2;
 
 enum DataImportOutcome { success, cancelled, invalidFile }
 
@@ -16,6 +17,7 @@ Future<String?> exportUserData() async {
     'yoraBackupVersion': _kBackupFormatVersion,
     'exportedAt': DateTime.now().toIso8601String(),
     'preferences': data,
+    'images': await encodeImagesForBackup(data),
   };
   final jsonString = const JsonEncoder.withIndent('  ').convert(envelope);
 
@@ -76,6 +78,9 @@ Future<DataImportOutcome> importUserData() async {
       }
     }
     if (Platform.isAndroid) await rewriteLegacyAndroidDownloadPaths();
+    if (Platform.isIOS) await relocateIosContainerPaths();
+    final images = decoded['images'];
+    if (images is Map) await restoreMissingImages(images);
     return DataImportOutcome.success;
   } catch (_) {
     return DataImportOutcome.invalidFile;
