@@ -761,9 +761,15 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
                 _buildThemeSwatch(activePalette, AppThemeId.ash),
                 _buildThemeSwatch(activePalette, AppThemeId.dark),
                 _buildThemeSwatch(activePalette, AppThemeId.onyx),
-                _buildThemeSwatch(activePalette, AppThemeId.galaxy),
-                _buildThemeSwatch(activePalette, AppThemeId.aurora),
-                _buildCustomThemeSwatch(activePalette),
+                if (isMobile) ...[
+                  _buildThemeSwatch(activePalette, AppThemeId.galaxy),
+                  _buildThemeSwatch(activePalette, AppThemeId.aurora),
+                  _buildCustomThemeSwatch(activePalette),
+                ] else ...[
+                  _buildCustomThemeSwatch(activePalette),
+                  _buildThemeSwatch(activePalette, AppThemeId.aurora),
+                  _buildThemeSwatch(activePalette, AppThemeId.galaxy),
+                ],
                 _buildImageThemeSwatch(activePalette),
               ],
             ),
@@ -774,7 +780,7 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
               itemWidth: 32,
               runSpacing: 18,
               children: [
-                for (final preset in kAccentPresets) _buildAccentSwatch(activePalette, preset.$1, preset.$2),
+                for (final preset in _accentPresets) _buildAccentSwatch(activePalette, preset.$1, preset.$2),
                 _buildCustomAccentSwatch(activePalette),
               ],
             ),
@@ -783,6 +789,8 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
       },
     );
   }
+
+  List<(String, Color)> get _accentPresets => isMobile ? kMobileAccentPresets : kAccentPresets;
 
   Widget _balancedGrid({required double itemWidth, required double runSpacing, required List<Widget> children}) {
     const minGap = 12.0;
@@ -1024,7 +1032,7 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
 
   Widget _buildCustomAccentSwatch(AppPalette activePalette) {
     final accent = widget.themeState.accentSeed;
-    final isPreset = kAccentPresets.any((preset) => preset.$2.toARGB32() == accent.toARGB32());
+    final isPreset = _accentPresets.any((preset) => preset.$2.toARGB32() == accent.toARGB32());
     return InkWell(
       onTap: () => showCustomColorPickerDialog(
         context,
