@@ -13,6 +13,8 @@ Future<void> initMobilePaths() async {
   if (Platform.isIOS) {
     _mobileDownloadsPath = joinPath([documents.path, 'Downloads']);
     _mobileCachePath = joinPath([(await getApplicationCacheDirectory()).path, 'Yora']);
+    _iosContainerPath = documents.parent.path;
+    await relocateIosContainerPaths();
     return;
   }
   final support = await getApplicationSupportDirectory();
@@ -28,6 +30,20 @@ Future<void> initMobilePaths() async {
   _mobileCachePath = joinPath([external.path, 'Cache']);
   _legacyAndroidDownloadsPath = legacyDownloads;
   await _migrateLegacyAndroidStorage(legacyDownloads, legacyCache);
+}
+
+String? _iosContainerPath;
+const String _iosContainerKey = 'iosContainerPath';
+
+Future<void> relocateIosContainerPaths() async {
+  final current = _iosContainerPath;
+  if (current == null) return;
+  final prefs = await SharedPreferences.getInstance();
+  final previous = prefs.getString(_iosContainerKey);
+  if (previous != null && previous != current) {
+    await _replacePathPrefixInPrefs(previous, current);
+  }
+  await prefs.setString(_iosContainerKey, current);
 }
 
 Future<void> rewriteLegacyAndroidDownloadPaths() async {
