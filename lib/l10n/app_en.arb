@@ -85,6 +85,7 @@
   "searchToAddPlaylistTitle": "Add to {playlist}",
   "addButtonLabel": "Add",
   "addTracksSearchHint": "What do you want to add?",
+  "searchSongOrArtistPrompt": "Search for a song or an artist",
   "suggestionsForYouLabel": "Suggested for you",
   "editInfoButtonLabel": "Name and details",
 

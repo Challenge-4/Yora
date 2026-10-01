@@ -94,6 +94,7 @@
   },
   "addButtonLabel": "Ajouter",
   "addTracksSearchHint": "Que souhaites-tu ajouter ?",
+  "searchSongOrArtistPrompt": "Recherche un titre ou un artiste",
   "suggestionsForYouLabel": "Suggestions pour toi",
   "editInfoButtonLabel": "Nom et informations",
 

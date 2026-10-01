@@ -42,6 +42,8 @@ import 'widgets/galaxy_background.dart';
 import 'widgets/image_theme_background.dart';
 import 'widgets/now_playing_bar.dart';
 import 'widgets/queue_panel.dart';
+import 'widgets/mobile/mobile_add_track_row.dart';
+import 'widgets/mobile/mobile_add_tracks_search_page.dart';
 import 'widgets/mobile/mobile_bottom_nav.dart';
 import 'widgets/mobile/mobile_edit_playlist_sheet.dart';
 import 'widgets/mobile/mobile_insets.dart';
@@ -2102,6 +2104,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     _pushNavHistory(_NavArtist(artistName));
     _closeSearch();
     _mobilePlayerOpen = false;
+    _mobileSearchAddPlaylist = null;
+    _mobileAddSearchOpen = false;
     _artist.openArtist(artistName);
   }
 
@@ -2202,6 +2206,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   String? _mobileSearchAddPlaylist;
   List<YtSearchResult>? _mobileAddSuggestions;
   bool _mobileAddSuggestionsLoading = false;
+  bool _mobileAddSearchOpen = false;
   final _mobileLibraryKey = GlobalKey<MobileLibraryViewState>();
   final _mobileProfileKey = GlobalKey<ProfileSettingsDialogState>();
 
@@ -2232,6 +2237,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   void _handleMobileBack() {
     if (_mobilePlayerOpen) {
       setState(() => _mobilePlayerOpen = false);
+    } else if (_mobileSearchAddPlaylist != null && _mobileAddSearchOpen) {
+      _closeMobileAddSearch();
     } else if (_mobileSearchAddPlaylist != null) {
       _closeSearch();
       setState(() => _mobileSearchAddPlaylist = null);
@@ -2411,7 +2418,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   ];
 
   void _openMobileSearchToAdd(String playlistName) {
-    setState(() => _mobileSearchAddPlaylist = playlistName);
+    setState(() {
+      _mobileSearchAddPlaylist = playlistName;
+      _mobileAddSearchOpen = false;
+    });
     if (_mobileAddSuggestions == null && !_mobileAddSuggestionsLoading) {
       unawaited(_loadMobileAddSuggestions());
     }
@@ -2557,30 +2567,66 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   Widget _buildMobileSearchToPlaylistPage() {
     final playlistName = _mobileSearchAddPlaylist!;
-    final tracks = (_library.musicPlaylists[playlistName]?['tracks'] as List<String>?) ?? const <String>[];
+    Widget row(YtSearchResult video) => _buildMobileAddTrackRow(playlistName, video);
+    if (_mobileAddSearchOpen) {
+      return MobileAddTracksSearchPage(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        layerLink: _searchLayerLink,
+        query: _searchQuery,
+        isSearching: _isSearching,
+        results: _searchResults,
+        rowBuilder: row,
+        onQueryChanged: _onSearchQueryChanged,
+        onClear: _closeSearch,
+        onBack: _closeMobileAddSearch,
+      );
+    }
     return MobileSearchToPlaylistPage(
-      playlistName: playlistName,
-      controller: _searchController,
-      focusNode: _searchFocusNode,
-      layerLink: _searchLayerLink,
-      query: _searchQuery,
-      isSearching: _isSearching,
-      results: _searchResults,
       suggestions: _mobileAddSuggestions,
       suggestionsLoading: _mobileAddSuggestionsLoading,
-      tracksInPlaylist: tracks.toSet(),
-      playingPreviewId: _playback.currentPlayingPath?.startsWith('preview:') == true && !_playback.userPaused
-          ? _playback.currentPlayingPath!.substring('preview:'.length)
-          : null,
-      onPreview: _playPreview,
-      onQueryChanged: _onSearchQueryChanged,
-      onClear: _closeSearch,
+      rowBuilder: row,
+      onOpenSearch: _openMobileAddSearch,
       onClose: () {
         _closeSearch();
         setState(() => _mobileSearchAddPlaylist = null);
       },
-      onToggle: (video, isInPlaylist) {
-        final onlinePath = 'online:${video.id}';
+    );
+  }
+
+  void _openMobileAddSearch() {
+    setState(() => _mobileAddSearchOpen = true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _searchFocusNode.requestFocus();
+    });
+  }
+
+  void _closeMobileAddSearch() {
+    _searchFocusNode.unfocus();
+    _closeSearch();
+    setState(() => _mobileAddSearchOpen = false);
+  }
+
+  Widget _buildMobileAddTrackRow(String playlistName, YtSearchResult video) {
+    final onlinePath = 'online:${video.id}';
+    final tracks = (_library.musicPlaylists[playlistName]?['tracks'] as List<String>?) ?? const <String>[];
+    final likedTracks = (_likedPlaylistEntry?.value['tracks'] as List<String>?) ?? const <String>[];
+    final current = _playback.currentPlayingPath;
+    final isInPlaylist = tracks.contains(onlinePath);
+    return MobileAddTrackRow(
+      video: video,
+      isInPlaylist: isInPlaylist,
+      isLiked: likedTracks.contains(onlinePath),
+      isPlaying: current == 'preview:${video.id}' && !_playback.userPaused,
+      onTap: () => _playPreview(video),
+      onLongPress: () {
+        if (!_library.trackMetadata.containsKey(onlinePath)) {
+          setState(() => _library.trackMetadata[onlinePath] = metadataMap(video));
+        }
+        _showAddToPlaylistMenu(context, Offset.zero, {onlinePath});
+      },
+      onToggleLike: () => _toggleLikeForSearchResult(video),
+      onToggleAdd: () {
         if (!_library.trackMetadata.containsKey(onlinePath)) {
           setState(() => _library.trackMetadata[onlinePath] = metadataMap(video));
         }
