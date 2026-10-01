@@ -1,5 +1,5 @@
 #define AppName "Yora"
-#define AppVersion "1.0.0"
+#define AppVersion "1.0.1"
 #define AppPublisher "Yora"
 #define AppExeName "yora.exe"
 #define ReleaseDir "..\..\build\windows\x64\runner\Release"

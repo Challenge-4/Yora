@@ -2,7 +2,7 @@ name: local_media_hub
 description: "Yora — lecteur de musique de bureau (Windows, macOS, Linux) : bibliothèque locale + YouTube Music via yt-dlp."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.13.2
