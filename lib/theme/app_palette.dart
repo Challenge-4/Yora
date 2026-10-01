@@ -230,4 +230,5 @@ const List<(String, Color)> kAccentPresets = [
   ('Rose', Color(0xFFEC4899)),
   ('Jaune', Color(0xFFFBBF24)),
   ('Turquoise', Color(0xFF14B8A6)),
+  ('Citron vert', Color(0xFF84CC16)),
 ];
