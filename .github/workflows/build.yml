@@ -247,8 +247,31 @@ jobs:
       - run: flutter build ios --release --no-codesign
       - name: Paquet .ipa
         run: |
+          brew install ldid
+          check_ldid() {
+            failed=0
+            while IFS= read -r file; do
+              if file "$file" | grep -q "Mach-O"; then
+                if ! ldid -S "$file" > /dev/null 2>&1; then
+                  echo "ldid échoue sur ${file#$1/}"
+                  failed=1
+                fi
+              fi
+            done < <(find "$1" -type f)
+            return $failed
+          }
+          mkdir -p before
+          cp -R build/ios/iphoneos/Runner.app before/
+          check_ldid before && echo "Avant signature : ldid accepte tout" || echo "Avant signature : ldid refuse certains fichiers"
+          APP=build/ios/iphoneos/Runner.app
+          find "$APP/Frameworks" -maxdepth 1 \( -name "*.framework" -o -name "*.dylib" \) -exec codesign --force --sign - --timestamp=none {} \;
+          codesign --force --sign - --timestamp=none --preserve-metadata=entitlements "$APP"
+          mkdir -p after
+          cp -R "$APP" after/
+          check_ldid after
+          echo "Après signature : ldid accepte tout"
           mkdir -p Payload
-          cp -R build/ios/iphoneos/Runner.app Payload/
+          cp -R "$APP" Payload/
           zip -qr yora-ios.ipa Payload
       - run: flutter build ios --simulator
       - name: Test de démarrage (simulateur)
