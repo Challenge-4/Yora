@@ -2265,26 +2265,33 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
         final size = MediaQuery.sizeOf(sheetContext);
         return ListenableBuilder(
           listenable: _playback,
-          builder: (context, _) => SafeArea(
-            child: QueuePanel(
-              width: size.width,
-              maxHeight: size.height * 0.6,
-              playback: _playback,
-              library: _library,
-              trackPresenter: _trackPresenter,
-              onClose: () => Navigator.of(sheetContext).pop(),
-              onJumpToQueueIndex: _jumpToQueueIndex,
-              onPlayRecentTrack: (path) => _playbackController.playStandaloneTrack(path),
-              onClearCustomQueue: () => _playbackController.clearCustomQueue(),
-              onRemoveFromCustomQueue: (index) => _playbackController.removeFromCustomQueue(index),
-              onRemoveFromAutomaticQueue: (index) => _playbackController.removeFromAutomaticQueue(index),
-              onReorderCustomQueue: _playbackController.reorderCustomQueue,
-              onReorderUpcoming: _playbackController.reorderUpcoming,
-              onViewArtist: (artist) {
-                Navigator.of(sheetContext).pop();
-                _showArtistPage(artist);
-              },
-            ),
+          builder: (context, _) => Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              QueuePanel(
+                width: size.width,
+                maxHeight: size.height * 0.6,
+                playback: _playback,
+                library: _library,
+                trackPresenter: _trackPresenter,
+                onClose: () => Navigator.of(sheetContext).pop(),
+                onJumpToQueueIndex: _jumpToQueueIndex,
+                onPlayRecentTrack: (path) => _playbackController.playStandaloneTrack(path),
+                onClearCustomQueue: () => _playbackController.clearCustomQueue(),
+                onRemoveFromCustomQueue: (index) => _playbackController.removeFromCustomQueue(index),
+                onRemoveFromAutomaticQueue: (index) => _playbackController.removeFromAutomaticQueue(index),
+                onReorderCustomQueue: _playbackController.reorderCustomQueue,
+                onReorderUpcoming: _playbackController.reorderUpcoming,
+                onViewArtist: (artist) {
+                  Navigator.of(sheetContext).pop();
+                  _showArtistPage(artist);
+                },
+              ),
+              ColoredBox(
+                color: Color.alphaBlend(AppTheme.paletteOf(context).cardHover, Colors.black),
+                child: SizedBox(width: size.width, height: MediaQuery.viewPaddingOf(sheetContext).bottom),
+              ),
+            ],
           ),
         );
       },
@@ -2455,7 +2462,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
         onOpenQueue: _openMobileQueue,
         onOpenTrackMenu: () {
           final path = _playback.currentPlayingPath;
-          if (path != null) _showAddToPlaylistMenu(context, Offset.zero, {path});
+          if (path != null) _showAddToPlaylistMenu(context, Offset.zero, {_libraryKeyForCurrentTrack(path)});
         },
         onOpenAddToPlaylist: () {
           final path = _playback.currentPlayingPath;
@@ -2791,7 +2798,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   void _importPlaylistFromUrl(String url) => _playlistImport.importFromUrl(url);
 
-  Future<void> _showAddCurrentPreviewToPlaylistMenu(BuildContext btnContext, String currentPath) async {
+  String _libraryKeyForCurrentTrack(String currentPath) {
     final key = _likeKeyForPath(currentPath);
     final preview = _playback.previewVideo;
     if (isPreviewTrack(currentPath) && preview != null) {
@@ -2799,6 +2806,11 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
         _library.trackMetadata[key] = metadataMap(preview);
       });
     }
+    return key;
+  }
+
+  Future<void> _showAddCurrentPreviewToPlaylistMenu(BuildContext btnContext, String currentPath) async {
+    final key = _libraryKeyForCurrentTrack(currentPath);
     if (isMobile) {
       await showMobileTrackActionsSheet(
         btnContext,
