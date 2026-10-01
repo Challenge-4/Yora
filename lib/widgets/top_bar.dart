@@ -8,7 +8,7 @@ import '../utils/link_launcher.dart';
 import '../utils/platform_paths.dart';
 
 const String githubRepoUrl = 'https://github.com/Challenge-4/Yora';
-const String appVersion = '1.0.1';
+const String appVersion = '1.0.2';
 
 class TopBar extends StatelessWidget {
   final Widget searchBar;
