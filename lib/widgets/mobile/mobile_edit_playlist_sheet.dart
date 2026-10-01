@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'mobile_insets.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../models/playlist_display_name.dart';
 import '../../theme/app_palette.dart';
@@ -114,8 +115,8 @@ class _MobileEditPlaylistSheetState extends State<_MobileEditPlaylistSheet> {
         color: widget.surfaceColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         clipBehavior: Clip.antiAlias,
-        child: SafeArea(
-          top: false,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: mobileBottomInset(context)),
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,

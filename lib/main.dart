@@ -44,6 +44,7 @@ import 'widgets/now_playing_bar.dart';
 import 'widgets/queue_panel.dart';
 import 'widgets/mobile/mobile_bottom_nav.dart';
 import 'widgets/mobile/mobile_edit_playlist_sheet.dart';
+import 'widgets/mobile/mobile_insets.dart';
 import 'widgets/mobile/mobile_library_view.dart';
 import 'widgets/mobile/mobile_mini_player.dart';
 import 'widgets/mobile/mobile_now_playing_page.dart';
@@ -2289,7 +2290,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
               ),
               ColoredBox(
                 color: Color.alphaBlend(AppTheme.paletteOf(context).cardHover, Colors.black),
-                child: SizedBox(width: size.width, height: MediaQuery.viewPaddingOf(sheetContext).bottom),
+                child: SizedBox(width: size.width, height: mobileBottomInset(sheetContext)),
               ),
             ],
           ),
@@ -2307,7 +2308,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     showModalBottomSheet<void>(
       context: context,
       backgroundColor: Color.alphaBlend(palette.cardHover, Colors.black),
-      builder: (sheetContext) => SafeArea(
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(bottom: mobileBottomInset(sheetContext)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

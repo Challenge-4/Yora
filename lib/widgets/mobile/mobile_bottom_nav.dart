@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../theme/app_theme.dart';
+import 'mobile_insets.dart';
 
 class MobileBottomNav extends StatelessWidget {
   final int index;
@@ -42,11 +41,10 @@ class MobileBottomNav extends StatelessWidget {
       );
     }
 
-    final bottomInset = MediaQuery.viewPaddingOf(context).bottom;
     return Container(
       color: Color.alphaBlend(palette.background, Colors.black),
       child: Padding(
-        padding: EdgeInsets.only(bottom: Platform.isIOS ? bottomInset / 2 : bottomInset),
+        padding: EdgeInsets.only(bottom: mobileBottomInset(context)),
         child: Row(
           children: [
             item(0, Icons.home_outlined, Icons.home_filled, l10n.homeNavLabel),
