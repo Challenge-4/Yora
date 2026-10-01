@@ -20,6 +20,8 @@ Search, stream, download and organize your music. No account, no ads, no server:
 
 ![Yora on mobile](assets/branding/yora-mobile.jpg)
 
+<sub><i>Screenshots shown with the Astral theme.</i></sub>
+
 </div>
 
 ## 🌃 Features
