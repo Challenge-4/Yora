@@ -87,7 +87,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
         <img width="220" alt="Download for iOS" src="assets/branding/buttons/ios.png">
       </a>
       <blockquote>
-        *iPA file only. Requires sideloading with <a href="https://iloader.app">iLoader</a> (<a href="https://sidestore.io">SideStore</a>) or similar tools.
+        *iPA file only. Requires sideloading with <a href="https://sidestore.io">SideStore</a> or similar tools.
       </blockquote>
     </td>
   </tr>
