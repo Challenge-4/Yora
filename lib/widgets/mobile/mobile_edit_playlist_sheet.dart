@@ -108,14 +108,14 @@ class _MobileEditPlaylistSheetState extends State<_MobileEditPlaylistSheet> {
   Widget build(BuildContext context) {
     final palette = AppTheme.paletteOf(context);
     final l10n = AppLocalizations.of(context);
-    return SafeArea(
-      top: false,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.9),
-        child: Material(
-          color: widget.surfaceColor,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-          clipBehavior: Clip.antiAlias,
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.9),
+      child: Material(
+        color: widget.surfaceColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: SafeArea(
+          top: false,
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
