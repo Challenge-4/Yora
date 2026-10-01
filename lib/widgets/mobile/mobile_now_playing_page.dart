@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../l10n/generated/app_localizations.dart';
@@ -158,31 +159,11 @@ class MobileNowPlayingPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
-                SliderTheme(
-                  data: SliderTheme.of(context).copyWith(
-                    trackHeight: 4,
-                    thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
-                    overlayShape: SliderComponentShape.noOverlay,
-                    activeTrackColor: palette.textPrimary,
-                    inactiveTrackColor: palette.textPrimary.withValues(alpha: 0.25),
-                    thumbColor: palette.textPrimary,
-                  ),
-                  child: Slider(
-                    min: 0,
-                    max: maxMs,
-                    value: positionMs,
-                    onChanged: (value) => onSeek(Duration(milliseconds: value.toInt())),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(formatDuration(playback.position), style: TextStyle(color: palette.textSecondary, fontSize: 12)),
-                      Text(formatDuration(playback.duration), style: TextStyle(color: palette.textSecondary, fontSize: 12)),
-                    ],
-                  ),
+                _MobileSeekBar(
+                  positionMs: positionMs,
+                  maxMs: maxMs,
+                  duration: playback.duration,
+                  onSeek: onSeek,
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -233,6 +214,94 @@ class MobileNowPlayingPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _MobileSeekBar extends StatefulWidget {
+  final double positionMs;
+  final double maxMs;
+  final Duration duration;
+  final ValueChanged<Duration> onSeek;
+
+  const _MobileSeekBar({
+    required this.positionMs,
+    required this.maxMs,
+    required this.duration,
+    required this.onSeek,
+  });
+
+  @override
+  State<_MobileSeekBar> createState() => _MobileSeekBarState();
+}
+
+class _MobileSeekBarState extends State<_MobileSeekBar> {
+  double? _dragMs;
+  double? _pendingMs;
+  Timer? _pendingTimer;
+
+  @override
+  void didUpdateWidget(_MobileSeekBar oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final pending = _pendingMs;
+    if (pending != null && (widget.positionMs - pending).abs() < 1500) {
+      _pendingTimer?.cancel();
+      _pendingMs = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pendingTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = AppTheme.paletteOf(context);
+    final shownMs = (_dragMs ?? _pendingMs ?? widget.positionMs).clamp(0.0, widget.maxMs);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            trackHeight: 4,
+            thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+            overlayShape: SliderComponentShape.noOverlay,
+            activeTrackColor: palette.textPrimary,
+            inactiveTrackColor: palette.textPrimary.withValues(alpha: 0.25),
+            thumbColor: palette.textPrimary,
+          ),
+          child: Slider(
+            min: 0,
+            max: widget.maxMs,
+            value: shownMs,
+            onChangeStart: (value) => setState(() => _dragMs = value),
+            onChanged: (value) => setState(() => _dragMs = value),
+            onChangeEnd: (value) {
+              widget.onSeek(Duration(milliseconds: value.toInt()));
+              _pendingTimer?.cancel();
+              _pendingTimer = Timer(const Duration(seconds: 3), () {
+                if (mounted) setState(() => _pendingMs = null);
+              });
+              setState(() {
+                _pendingMs = value;
+                _dragMs = null;
+              });
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(formatDuration(Duration(milliseconds: shownMs.toInt())), style: TextStyle(color: palette.textSecondary, fontSize: 12)),
+              Text(formatDuration(widget.duration), style: TextStyle(color: palette.textSecondary, fontSize: 12)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
