@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../services/yt_dlp_service.dart';
@@ -88,7 +90,7 @@ class MobileAddTracksSearchPage extends StatelessWidget {
             ),
             Expanded(child: body),
             Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 12 + (keyboard > 0 ? keyboard : mobileBottomInset(context))),
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 12 + max(keyboard, mobileBottomInset(context))),
               child: TopSearchBar(
                 layerLink: layerLink,
                 controller: controller,
