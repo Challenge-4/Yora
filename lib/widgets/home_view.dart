@@ -148,8 +148,8 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  static final _cardWidth = isMobile ? 160.0 : 150.0;
-  static final _cardHeight = isMobile ? 236.0 : 220.0;
+  static const _cardWidth = 150.0;
+  static final _cardHeight = isMobile ? 226.0 : 220.0;
   static const _playlistTileMaxWidth = 340.0;
   static final _playlistTileHeight = isMobile ? 60.0 : 64.0;
   static const _playlistGridSpacing = 12.0;
