@@ -2641,6 +2641,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   }
 
   Widget _buildMobileNowPlayingPage() => MobileNowPlayingPage(
+        toast: _toastMessage != null ? _buildAppToast() : null,
         playback: _playback,
         trackPresenter: _trackPresenter,
         onClose: () => setState(() => _mobilePlayerOpen = false),
@@ -2712,7 +2713,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
             ),
           if (_mobileSearchAddPlaylist != null)
             Positioned.fill(child: _buildMobileSearchToPlaylistPage()),
-          if (_toastMessage != null)
+          if (_toastMessage != null && !(_mobilePlayerOpen && hasTrack && _mobileSearchAddPlaylist == null))
             Positioned(
               left: 16,
               right: 16,

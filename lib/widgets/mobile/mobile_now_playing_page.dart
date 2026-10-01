@@ -25,6 +25,7 @@ class MobileNowPlayingPage extends StatelessWidget {
   final VoidCallback onToggleLike;
   final void Function(Duration position) onSeek;
   final void Function(String artistName) onViewArtist;
+  final Widget? toast;
 
   const MobileNowPlayingPage({
     super.key,
@@ -42,6 +43,7 @@ class MobileNowPlayingPage extends StatelessWidget {
     required this.onToggleLike,
     required this.onSeek,
     required this.onViewArtist,
+    this.toast,
   });
 
   @override
@@ -104,24 +106,38 @@ class MobileNowPlayingPage extends StatelessWidget {
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) {
-                      final size = min(constraints.maxWidth, constraints.maxHeight);
+                      const gapBelowCover = 24.0;
+                      final size = max(0.0, min(constraints.maxWidth, constraints.maxHeight - gapBelowCover));
+                      final coverTop = max(0.0, (constraints.maxHeight - gapBelowCover - size) / 2);
                       final coverUrl = trackPresenter.thumbnailUrlFor(path);
-                      return Center(
-                        child: SizedBox(
-                          width: size,
-                          height: size,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(6),
-                            child: coverUrl == null
-                                ? trackPresenter.thumbnailFallback(size)
-                                : HighResCover(url: coverUrl, placeholder: trackPresenter.thumbnail(path, size: size)),
+                      final toastWidget = toast;
+                      return Stack(
+                        children: [
+                          Positioned(
+                            top: coverTop,
+                            left: (constraints.maxWidth - size) / 2,
+                            width: size,
+                            height: size,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: coverUrl == null
+                                  ? trackPresenter.thumbnailFallback(size)
+                                  : HighResCover(url: coverUrl, placeholder: trackPresenter.thumbnail(path, size: size)),
+                            ),
                           ),
-                        ),
+                          if (toastWidget != null)
+                            Positioned(
+                              top: coverTop + size,
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: IgnorePointer(child: Center(child: toastWidget)),
+                            ),
+                        ],
                       );
                     },
                   ),
                 ),
-                const SizedBox(height: 24),
                 Row(
                   children: [
                     Expanded(
