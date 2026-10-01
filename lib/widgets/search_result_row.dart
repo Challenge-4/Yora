@@ -51,7 +51,7 @@ class SearchResultRow extends StatelessWidget {
       onTap: onTap,
       mouseCursor: SystemMouseCursors.click,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: isMobile ? 16 : 12, vertical: isMobile ? 6 : 8),
+        padding: isMobile ? const EdgeInsets.fromLTRB(16, 6, 5, 6) : const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Row(
           children: [
             SizedBox(

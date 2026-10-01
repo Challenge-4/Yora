@@ -3,6 +3,7 @@ import '../services/charts_service.dart';
 import '../services/yt_dlp_service.dart';
 import '../state/charts_state.dart';
 import '../theme/app_theme.dart';
+import '../utils/platform_paths.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'horizontal_card_row.dart';
 import 'release_card.dart';
@@ -109,7 +110,7 @@ class ExplorerView extends StatelessWidget {
     final palette = AppTheme.paletteOf(context);
     return SizedBox.expand(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(0, 24, 16, 24),
+        padding: EdgeInsets.fromLTRB(0, 24, isMobile ? 0 : 16, 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
