@@ -13,7 +13,27 @@ class YoutubeExplodeService implements YoutubeBackend {
   @override
   String get audioExtension => 'm4a';
 
+  static const _visionOs = YoutubeApiClient({
+    'context': {
+      'client': {
+        'clientName': 'VISIONOS',
+        'clientVersion': '1.02',
+        'deviceMake': 'Apple',
+        'deviceModel': 'RealityDevice17,1',
+        'osName': 'visionOS',
+        'osVersion': '26.5.23O471',
+        'userAgent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 15_7_3) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Safari/605.1.15',
+        'hl': 'en',
+        'timeZone': 'UTC',
+        'utcOffsetMinutes': 0,
+      },
+    },
+  }, 'https://www.youtube.com/youtubei/v1/player?prettyPrint=false');
+
+  static const _manifestTimeout = Duration(seconds: 20);
+
   static final List<List<YoutubeApiClient>> _clientAttempts = [
+    [_visionOs],
     [YoutubeApiClient.androidVr],
     [YoutubeApiClient.ios],
     [YoutubeApiClient.android],
@@ -124,7 +144,7 @@ class YoutubeExplodeService implements YoutubeBackend {
     Object lastError = Exception('Aucun flux audio disponible.');
     for (final clients in _clientAttempts) {
       try {
-        final manifest = await _yt.videos.streamsClient.getManifest(videoId, ytClients: clients);
+        final manifest = await _yt.videos.streamsClient.getManifest(videoId, ytClients: clients).timeout(_manifestTimeout);
         final audio = manifest.audioOnly.where((s) => s.container.name == 'mp4').toList()
           ..sort((a, b) => b.bitrate.compareTo(a.bitrate));
         if (audio.isEmpty) continue;
