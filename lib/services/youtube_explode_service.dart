@@ -72,15 +72,109 @@ class YoutubeExplodeService implements YoutubeBackend {
 
   @override
   Future<(String title, List<YtSearchResult> tracks)> fetchPlaylist(String url) async {
-    final playlist = await _yt.playlists.get(url).timeout(const Duration(seconds: 60));
-    final tracks = <YtSearchResult>[];
-    await for (final video in _yt.playlists.getVideos(playlist.id)) {
-      tracks.add(_toResult(video));
+    final playlistId = Uri.tryParse(url)?.queryParameters['list'] ?? url;
+    if (!playlistId.startsWith('OLAK5uy_')) {
+      try {
+        final playlist = await _yt.playlists.get(url).timeout(const Duration(seconds: 60));
+        final tracks = <YtSearchResult>[];
+        await for (final video in _yt.playlists.getVideos(playlist.id)) {
+          tracks.add(_toResult(video));
+        }
+        if (tracks.isNotEmpty) {
+          return (playlist.title.isNotEmpty ? playlist.title : 'Playlist YouTube', tracks);
+        }
+      } catch (_) {}
     }
+    final (title, tracks) = await _fetchPlaylistFromBrowse(playlistId);
     if (tracks.isEmpty) {
       throw Exception('Playlist introuvable, vide, ou privée.');
     }
-    return (playlist.title.isNotEmpty ? playlist.title : 'Playlist YouTube', tracks);
+    return (title.isNotEmpty ? title : 'Playlist YouTube', tracks);
+  }
+
+  Future<(String, List<YtSearchResult>)> _fetchPlaylistFromBrowse(String playlistId) async {
+    final tracks = <YtSearchResult>[];
+    final seen = <String>{};
+    var title = '';
+    Map<String, dynamic> body = {'context': _innertubeContext, 'browseId': 'VL$playlistId'};
+    for (var page = 0; page < _maxPlaylistPages; page++) {
+      final response = await http
+          .post(Uri.parse(_innertubeBrowseUrl), headers: {'Content-Type': 'application/json'}, body: jsonEncode(body))
+          .timeout(const Duration(seconds: 15));
+      if (response.statusCode != 200) break;
+      final json = jsonDecode(response.body);
+      if (title.isEmpty) {
+        final rawTitle = json is Map ? (json['metadata']?['playlistMetadataRenderer']?['title']) : null;
+        if (rawTitle is String) title = rawTitle.replaceFirst(RegExp(r'^Album - '), '');
+      }
+      final continuations = <String>[];
+      _collectVideos(json, '', tracks, seen, continuations);
+      if (continuations.isEmpty) break;
+      body = {'context': _innertubeContext, 'continuation': continuations.first};
+    }
+    return (title, tracks);
+  }
+
+  static final _durationPattern = RegExp(r'^(?:(\d+):)?(\d+):(\d{2})$');
+
+  int? _findDurationMs(dynamic node) {
+    if (node is Map) {
+      final badge = node['thumbnailBadgeViewModel'];
+      final text = badge is Map ? badge['text'] : null;
+      final match = text is String ? _durationPattern.firstMatch(text) : null;
+      if (match != null) {
+        final hours = int.parse(match.group(1) ?? '0');
+        final minutes = int.parse(match.group(2)!);
+        final seconds = int.parse(match.group(3)!);
+        return ((hours * 60 + minutes) * 60 + seconds) * 1000;
+      }
+      for (final value in node.values) {
+        final found = _findDurationMs(value);
+        if (found != null) return found;
+      }
+    } else if (node is List) {
+      for (final value in node) {
+        final found = _findDurationMs(value);
+        if (found != null) return found;
+      }
+    }
+    return null;
+  }
+
+  void _collectVideos(dynamic node, String path, List<YtSearchResult> out, Set<String> seen, List<String> continuations) {
+    if (node is Map) {
+      final lockup = node['lockupViewModel'];
+      if (lockup is Map && lockup['contentType'] == 'LOCKUP_CONTENT_TYPE_VIDEO') {
+        final id = lockup['contentId'];
+        final metadata = lockup['metadata']?['lockupMetadataViewModel'];
+        final title = metadata?['title']?['content'];
+        final rows = metadata?['metadata']?['contentMetadataViewModel']?['metadataRows'];
+        String author = '';
+        if (rows is List && rows.isNotEmpty) {
+          final parts = rows.first['metadataParts'];
+          final content = parts is List && parts.isNotEmpty ? (parts.first['text']?['content']) : null;
+          if (content is String) author = content;
+        }
+        if (id is String && title is String && seen.add(id)) {
+          out.add(YtSearchResult(
+            id: id,
+            title: title,
+            author: author,
+            thumbnailUrl: 'https://img.youtube.com/vi/$id/mqdefault.jpg',
+            durationMs: _findDurationMs(lockup['contentImage']),
+          ));
+        }
+      }
+      final command = node['continuationCommand'];
+      if (command is Map && command['token'] is String && !path.contains('/header')) {
+        continuations.add(command['token'] as String);
+      }
+      node.forEach((key, value) => _collectVideos(value, '$path/$key', out, seen, continuations));
+    } else if (node is List) {
+      for (final value in node) {
+        _collectVideos(value, path, out, seen, continuations);
+      }
+    }
   }
 
   @override
