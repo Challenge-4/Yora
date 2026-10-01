@@ -2562,6 +2562,9 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
       onTrackTap: (index) => _onTrackTap(displayTracks, index, sourcePlaylist: playlistName),
       onTrackMenu: (context, position, path) =>
           _showAddToPlaylistMenu(context, position, {path}, removeFromTracks: tracks),
+      canReorder: _playlistView.sortCriterionFor(playlistName) == null &&
+          _playlistView.searchQueryFor(playlistName).trim().isEmpty,
+      onReorder: (oldIndex, newIndex) => _handleTrackReorder(playlistName, tracks, oldIndex, newIndex),
     );
   }
 

@@ -32,6 +32,8 @@ class MobilePlaylistView extends StatelessWidget {
   final void Function(BuildContext context) onDownloadAll;
   final void Function(int index) onTrackTap;
   final void Function(BuildContext context, Offset position, String path) onTrackMenu;
+  final bool canReorder;
+  final void Function(int oldIndex, int newIndex) onReorder;
 
   const MobilePlaylistView({
     super.key,
@@ -57,6 +59,8 @@ class MobilePlaylistView extends StatelessWidget {
     required this.onDownloadAll,
     required this.onTrackTap,
     required this.onTrackMenu,
+    required this.canReorder,
+    required this.onReorder,
   });
 
   Widget _header(BuildContext context) {
@@ -285,6 +289,22 @@ class MobilePlaylistView extends StatelessWidget {
                   style: TextStyle(color: palette.textSecondary),
                 ),
               ),
+            ),
+          )
+        else if (canReorder)
+          SliverReorderableList(
+            itemCount: displayTracks.length,
+            onReorderItem: onReorder,
+            proxyDecorator: (child, index, animation) => Material(
+              color: Color.alphaBlend(palette.cardHover, Colors.black),
+              elevation: 8,
+              borderRadius: BorderRadius.circular(8),
+              child: child,
+            ),
+            itemBuilder: (context, index) => ReorderableDelayedDragStartListener(
+              key: ValueKey('track:$index:${displayTracks[index]}'),
+              index: index,
+              child: _row(context, index),
             ),
           )
         else
