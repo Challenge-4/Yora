@@ -10,6 +10,7 @@ class TopSearchBar extends StatelessWidget {
   final String query;
   final ValueChanged<String> onQueryChanged;
   final VoidCallback onClear;
+  final String? hintText;
 
   const TopSearchBar({
     super.key,
@@ -19,6 +20,7 @@ class TopSearchBar extends StatelessWidget {
     required this.query,
     required this.onQueryChanged,
     required this.onClear,
+    this.hintText,
   });
 
   @override
@@ -43,7 +45,7 @@ class TopSearchBar extends StatelessWidget {
                 focusNode: focusNode,
                 style: TextStyle(color: palette.textPrimary, fontSize: isMobile ? 17 : 14),
                 decoration: InputDecoration(
-                  hintText: AppLocalizations.of(context).searchOnlineHint,
+                  hintText: hintText ?? AppLocalizations.of(context).searchOnlineHint,
                   hintStyle: TextStyle(color: palette.textSecondary, fontSize: isMobile ? 17 : null),
                   border: InputBorder.none,
                   isDense: true,

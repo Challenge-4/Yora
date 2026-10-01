@@ -169,6 +169,25 @@ class ChartsService {
     return null;
   }
 
+  Future<List<YtSearchResult>> fetchArtistPopularSongs(String artistName) async {
+    final artist = await searchArtist(artistName);
+    if (artist == null) return [];
+    final json = await _browse(artist.browseId, forceEnglish: true);
+    final sections = _sectionListContents(json);
+    if (sections == null) return [];
+    for (final section in sections) {
+      final shelf = (section as Map<String, dynamic>)['musicShelfRenderer'] as Map<String, dynamic>?;
+      if (shelf == null) continue;
+      final tracks = <YtSearchResult>[];
+      for (final item in shelf['contents'] as List? ?? []) {
+        final track = _parseSongItem(item as Map<String, dynamic>);
+        if (track != null) tracks.add(track);
+      }
+      return tracks;
+    }
+    return [];
+  }
+
   List<dynamic>? _sectionListContents(Map<String, dynamic> json) {
     final single = json['contents']?['singleColumnBrowseResultsRenderer'] as Map<String, dynamic>?;
     final tabs = single?['tabs'] as List?;

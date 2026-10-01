@@ -93,6 +93,8 @@
     }
   },
   "addButtonLabel": "Ajouter",
+  "addTracksSearchHint": "Que souhaites-tu ajouter ?",
+  "suggestionsForYouLabel": "Suggestions pour toi",
   "editInfoButtonLabel": "Nom et informations",
 
   "trackCount": "{count, plural, one{{count} titre} other{{count} titres}}",

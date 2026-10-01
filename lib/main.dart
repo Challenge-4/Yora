@@ -84,6 +84,7 @@ import 'state/general_settings_state.dart';
 import 'theme/app_theme.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'models/playlist_display_name.dart';
+import 'models/sort_criterion_labels.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -2199,6 +2200,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   int _mobileTab = 0;
   bool _mobilePlayerOpen = false;
   String? _mobileSearchAddPlaylist;
+  List<YtSearchResult>? _mobileAddSuggestions;
+  bool _mobileAddSuggestionsLoading = false;
   final _mobileLibraryKey = GlobalKey<MobileLibraryViewState>();
   final _mobileProfileKey = GlobalKey<ProfileSettingsDialogState>();
 
@@ -2388,6 +2391,132 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     }
   }
 
+  static const _fallbackSuggestionArtists = [
+    'The Weeknd',
+    'Taylor Swift',
+    'Drake',
+    'Billie Eilish',
+    'Dua Lipa',
+    'Bad Bunny',
+    'Ed Sheeran',
+    'Ariana Grande',
+    'Daft Punk',
+    'Rihanna',
+    'Aya Nakamura',
+    'Stromae',
+    'Bruno Mars',
+    'Coldplay',
+    'Kendrick Lamar',
+    'SZA',
+  ];
+
+  void _openMobileSearchToAdd(String playlistName) {
+    setState(() => _mobileSearchAddPlaylist = playlistName);
+    if (_mobileAddSuggestions == null && !_mobileAddSuggestionsLoading) {
+      unawaited(_loadMobileAddSuggestions());
+    }
+  }
+
+  List<String> _suggestionArtists() {
+    final counts = <String, int>{};
+    for (final metadata in _library.trackMetadata.values) {
+      final author = metadata['author'];
+      if (author == null || author.isEmpty) continue;
+      final names = splitArtistNames(author);
+      if (names.isEmpty) continue;
+      counts[names.first] = (counts[names.first] ?? 0) + 1;
+    }
+    final ranked = counts.keys.toList()..sort((a, b) => counts[b]!.compareTo(counts[a]!));
+    final artists = (ranked.take(10).toList()..shuffle()).take(6).toList();
+    if (artists.length < 3) {
+      for (final name in [..._fallbackSuggestionArtists]..shuffle()) {
+        if (artists.length >= 6) break;
+        if (!artists.contains(name)) artists.add(name);
+      }
+    }
+    return artists;
+  }
+
+  Future<void> _loadMobileAddSuggestions() async {
+    setState(() => _mobileAddSuggestionsLoading = true);
+    final lists = await Future.wait(_suggestionArtists().map(
+      (name) => _chartsService.fetchArtistPopularSongs(name).catchError((Object _) => <YtSearchResult>[]),
+    ));
+    final seen = <String>{};
+    final songs = [
+      for (final list in lists) ...list.where((song) => seen.add(song.id)),
+    ]..shuffle();
+    if (!mounted) return;
+    setState(() {
+      _mobileAddSuggestions = songs;
+      _mobileAddSuggestionsLoading = false;
+    });
+  }
+
+  void _showMobileSortSheet(String playlistName) {
+    final l10n = AppLocalizations.of(context);
+    final palette = AppTheme.paletteOf(context);
+    final accent = AppTheme.of(context).accent;
+    final current = _playlistView.sortCriterionFor(playlistName);
+    final options = <(String?, String)>[
+      (null, l10n.sortByCustomOption),
+      for (final entry in sortCriterionLabelsFor(l10n).entries) (entry.key, entry.value),
+    ];
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Color.alphaBlend(palette.cardHover, Colors.black),
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(bottom: mobileBottomInset(sheetContext)),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Center(
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10, bottom: 6),
+                  width: 36,
+                  height: 4,
+                  decoration: BoxDecoration(color: palette.border, borderRadius: BorderRadius.circular(2)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+                child: Text(
+                  l10n.sortByMenuTitle,
+                  style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ),
+              for (final (key, label) in options)
+                ListTile(
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+                  title: Text(label, style: TextStyle(color: key == current ? accent : palette.textPrimary, fontSize: 17)),
+                  trailing: key == current ? Icon(Icons.check_circle, color: accent) : null,
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    setState(() => _applySortSelection(playlistName, key ?? '__default__'));
+                  },
+                ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Center(
+                  child: TextButton(
+                    onPressed: () => Navigator.of(sheetContext).pop(),
+                    child: Text(
+                      l10n.cancelButton,
+                      style: TextStyle(color: palette.textSecondary, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildMobilePlaylistView(String playlistName) {
     final playlistData = _library.musicPlaylists[playlistName]!;
     final tracks = playlistData['tracks'] as List<String>;
@@ -2416,7 +2545,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
         }
       },
       onEdit: () => _showEditPlaylistDialog(playlistName),
-      onSearchToAdd: () => setState(() => _mobileSearchAddPlaylist = playlistName),
+      onSearchToAdd: () => _openMobileSearchToAdd(playlistName),
+      onSort: () => _showMobileSortSheet(playlistName),
       onAddLocalFiles: () => _addFilesToPlaylist(playlistName, tracks),
       onDownloadAll: (context) => _confirmAndDownloadAllOnlineTracksInPlaylist(context, playlistName),
       onTrackTap: (index) => _onTrackTap(displayTracks, index, sourcePlaylist: playlistName),
@@ -2436,15 +2566,19 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
       query: _searchQuery,
       isSearching: _isSearching,
       results: _searchResults,
+      suggestions: _mobileAddSuggestions,
+      suggestionsLoading: _mobileAddSuggestionsLoading,
       tracksInPlaylist: tracks.toSet(),
-      likedPaths: (_likedPlaylistEntry?.value['tracks'] as List<String>?)?.toSet() ?? const <String>{},
+      playingPreviewId: _playback.currentPlayingPath?.startsWith('preview:') == true && !_playback.userPaused
+          ? _playback.currentPlayingPath!.substring('preview:'.length)
+          : null,
+      onPreview: _playPreview,
       onQueryChanged: _onSearchQueryChanged,
       onClear: _closeSearch,
       onClose: () {
         _closeSearch();
         setState(() => _mobileSearchAddPlaylist = null);
       },
-      onToggleLike: _toggleLikeForSearchResult,
       onToggle: (video, isInPlaylist) {
         final onlinePath = 'online:${video.id}';
         if (!_library.trackMetadata.containsKey(onlinePath)) {

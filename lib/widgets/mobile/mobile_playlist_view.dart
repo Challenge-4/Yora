@@ -27,6 +27,7 @@ class MobilePlaylistView extends StatelessWidget {
   final VoidCallback onPlay;
   final VoidCallback onEdit;
   final VoidCallback onSearchToAdd;
+  final VoidCallback onSort;
   final VoidCallback onAddLocalFiles;
   final void Function(BuildContext context) onDownloadAll;
   final void Function(int index) onTrackTap;
@@ -51,6 +52,7 @@ class MobilePlaylistView extends StatelessWidget {
     required this.onPlay,
     required this.onEdit,
     required this.onSearchToAdd,
+    required this.onSort,
     required this.onAddLocalFiles,
     required this.onDownloadAll,
     required this.onTrackTap,
@@ -145,6 +147,15 @@ class MobilePlaylistView extends StatelessWidget {
                   onPressed: () => onDownloadAll(context),
                 ),
               const Spacer(),
+              IconButton(
+                icon: Icon(
+                  Icons.sort,
+                  color: playlistView.sortCriterionFor(playlistName) == null ? palette.textSecondary : themeState.accent,
+                ),
+                tooltip: l10n.sortByMenuTitle,
+                onPressed: onSort,
+              ),
+              const SizedBox(width: 8),
               Material(
                 color: themeState.accent,
                 shape: const CircleBorder(),

@@ -84,6 +84,8 @@
   "searchInPlaylistTooltip": "Search in the playlist",
   "searchToAddPlaylistTitle": "Add to {playlist}",
   "addButtonLabel": "Add",
+  "addTracksSearchHint": "What do you want to add?",
+  "suggestionsForYouLabel": "Suggested for you",
   "editInfoButtonLabel": "Name and details",
 
   "trackCount": "{count, plural, one{{count} track} other{{count} tracks}}",
