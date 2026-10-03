@@ -26,6 +26,7 @@ import 'services/media_session_service.dart';
 import 'services/android_media_store_service.dart';
 import 'models/repeat_mode.dart';
 import 'utils/window_geometry.dart';
+import 'utils/foreign_tracks.dart';
 import 'utils/platform_paths.dart';
 import 'utils/link_launcher.dart';
 import 'utils/network_status.dart';
@@ -95,6 +96,10 @@ void main() async {
 
   await initMobilePaths();
   if (Platform.isAndroid) unawaited(AndroidMediaStoreService.purgeLegacyCacheFolder());
+  if (isMobile) {
+    await dropCustomFoldersFromOtherDevices();
+    await removeForeignLocalTracks(isOtherSystemLocalTrack);
+  }
   final prefs = await SharedPreferences.getInstance();
   final themeState = ThemeState.load(prefs);
   final generalSettings = GeneralSettingsState.load(prefs);

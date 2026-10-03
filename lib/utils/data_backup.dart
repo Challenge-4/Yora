@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'foreign_tracks.dart';
 import 'image_store.dart';
 import 'platform_paths.dart';
 
@@ -79,6 +80,8 @@ Future<DataImportOutcome> importUserData() async {
     }
     if (Platform.isAndroid) await rewriteLegacyAndroidDownloadPaths();
     if (Platform.isIOS) await relocateIosContainerPaths();
+    await dropCustomFoldersFromOtherDevices();
+    await removeForeignLocalTracks(isMissingLocalTrack);
     final images = decoded['images'];
     if (images is Map) await restoreMissingImages(images);
     return DataImportOutcome.success;
