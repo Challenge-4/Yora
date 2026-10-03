@@ -1,5 +1,32 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../utils/thumbnail_urls.dart';
+
+final Map<String, String?> _resolvedHighRes = {};
+final Set<String> _resolvingHighRes = {};
+
+void precacheHighResCover(BuildContext context, String url) {
+  if (_resolvedHighRes.containsKey(url) || !_resolvingHighRes.add(url)) return;
+  final candidates = highResThumbnailUrls(url);
+  Future<void> attempt(int index) async {
+    if (!context.mounted) {
+      _resolvingHighRes.remove(url);
+      return;
+    }
+    if (index >= candidates.length) {
+      _resolvedHighRes[url] = null;
+      _resolvingHighRes.remove(url);
+      return;
+    }
+    var failed = false;
+    await precacheImage(NetworkImage(candidates[index]), context, onError: (_, _) => failed = true);
+    if (failed) return attempt(index + 1);
+    _resolvedHighRes[url] = candidates[index];
+    _resolvingHighRes.remove(url);
+  }
+
+  unawaited(attempt(0));
+}
 
 class HighResCover extends StatelessWidget {
   final String url;
@@ -21,7 +48,8 @@ class HighResCover extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final urls = highResThumbnailUrls(url);
+    final resolved = _resolvedHighRes[url];
+    final urls = _resolvedHighRes.containsKey(url) ? [?resolved] : highResThumbnailUrls(url);
     return Stack(
       fit: StackFit.expand,
       children: [

@@ -43,6 +43,7 @@ import 'widgets/galaxy_background.dart';
 import 'widgets/image_theme_background.dart';
 import 'widgets/now_playing_bar.dart';
 import 'widgets/queue_panel.dart';
+import 'widgets/mobile/high_res_cover.dart';
 import 'widgets/mobile/mobile_add_track_row.dart';
 import 'widgets/mobile/mobile_add_tracks_search_page.dart';
 import 'widgets/mobile/mobile_bottom_nav.dart';
@@ -95,11 +96,11 @@ void main() async {
   if (isDesktop) await windowManager.ensureInitialized();
 
   await initMobilePaths();
-  if (Platform.isAndroid) unawaited(AndroidMediaStoreService.purgeLegacyCacheFolder());
   if (isMobile) {
     await dropCustomFoldersFromOtherDevices();
     await removeForeignLocalTracks(isOtherSystemLocalTrack);
   }
+  if (Platform.isAndroid) unawaited(AndroidMediaStoreService.purgeLegacyCacheFolder());
   final prefs = await SharedPreferences.getInstance();
   final themeState = ThemeState.load(prefs);
   final generalSettings = GeneralSettingsState.load(prefs);
@@ -2692,17 +2693,22 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
                   if (hasTrack)
                     ListenableBuilder(
                       listenable: _playback,
-                      builder: (context, _) => MobileMiniPlayer(
-                        playback: _playback,
-                        trackPresenter: _trackPresenter,
-                        onOpen: () => setState(() => _mobilePlayerOpen = true),
-                        onTogglePlayPause: _togglePlayPause,
-                        onToggleLike: _toggleLikeCurrentTrack,
-                        onOpenAddToPlaylist: (btnContext) {
-                          final path = _playback.currentPlayingPath;
-                          if (path != null) unawaited(_showAddCurrentPreviewToPlaylistMenu(btnContext, path));
-                        },
-                      ),
+                      builder: (context, _) {
+                        final playingPath = _playback.currentPlayingPath;
+                        final coverUrl = playingPath == null ? null : _trackPresenter.thumbnailUrlFor(playingPath);
+                        if (coverUrl != null) precacheHighResCover(context, coverUrl);
+                        return MobileMiniPlayer(
+                          playback: _playback,
+                          trackPresenter: _trackPresenter,
+                          onOpen: () => setState(() => _mobilePlayerOpen = true),
+                          onTogglePlayPause: _togglePlayPause,
+                          onToggleLike: _toggleLikeCurrentTrack,
+                          onOpenAddToPlaylist: (btnContext) {
+                            final path = _playback.currentPlayingPath;
+                            if (path != null) unawaited(_showAddCurrentPreviewToPlaylistMenu(btnContext, path));
+                          },
+                        );
+                      },
                     ),
                   MobileBottomNav(index: _mobileTab, onSelect: _selectMobileTab),
                 ],
