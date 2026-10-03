@@ -107,44 +107,48 @@ class HomeView extends StatelessWidget {
         ),
       );
     }
-    return SizedBox.expand(
-      child: SingleChildScrollView(
-        padding: isMobile ? const EdgeInsets.fromLTRB(0, 16, 0, 24) : const EdgeInsets.fromLTRB(0, 24, 16, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (topPlaylists.isNotEmpty) ...[
-              if (!isMobile) ...[
-                Text(AppLocalizations.of(context).playlistsSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
-                const SizedBox(height: 16),
+    return CustomScrollView(
+      slivers: [
+        SliverPadding(
+          padding: isMobile ? const EdgeInsets.fromLTRB(0, 16, 0, 24) : const EdgeInsets.fromLTRB(0, 24, 16, 24),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (topPlaylists.isNotEmpty) ...[
+                  if (!isMobile) ...[
+                    Text(AppLocalizations.of(context).playlistsSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
+                    const SizedBox(height: 16),
+                  ],
+                  _buildPlaylistGrid(topPlaylists),
+                  SizedBox(height: sectionGap),
+                ],
+                if (recentAdditions.isNotEmpty) ...[
+                  Text(AppLocalizations.of(context).recentAdditionsSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
+                  const SizedBox(height: 16),
+                  HorizontalCardRow<RecentAddition>(
+                    items: recentAdditions,
+                    cardWidth: _cardWidth,
+                    cardHeight: _cardHeight,
+                    cardBuilder: (addition) => _buildAdditionCard(context, addition),
+                  ),
+                  SizedBox(height: sectionGap),
+                ],
+                if (recentlyPlayed.isNotEmpty) ...[
+                  Text(AppLocalizations.of(context).recentlyPlayedSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
+                  const SizedBox(height: 16),
+                  HorizontalCardRow<String>(
+                    items: recentlyPlayed,
+                    cardWidth: _cardWidth,
+                    cardHeight: _cardHeight,
+                    cardBuilder: (path) => _buildTrackCard(context, path),
+                  ),
+                ],
               ],
-              _buildPlaylistGrid(topPlaylists),
-              SizedBox(height: sectionGap),
-            ],
-            if (recentAdditions.isNotEmpty) ...[
-              Text(AppLocalizations.of(context).recentAdditionsSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
-              const SizedBox(height: 16),
-              HorizontalCardRow<RecentAddition>(
-                items: recentAdditions,
-                cardWidth: _cardWidth,
-                cardHeight: _cardHeight,
-                cardBuilder: (addition) => _buildAdditionCard(context, addition),
-              ),
-              SizedBox(height: sectionGap),
-            ],
-            if (recentlyPlayed.isNotEmpty) ...[
-              Text(AppLocalizations.of(context).recentlyPlayedSectionTitle, style: TextStyle(color: palette.textPrimary, fontWeight: FontWeight.bold, fontSize: titleSize)),
-              const SizedBox(height: 16),
-              HorizontalCardRow<String>(
-                items: recentlyPlayed,
-                cardWidth: _cardWidth,
-                cardHeight: _cardHeight,
-                cardBuilder: (path) => _buildTrackCard(context, path),
-              ),
-            ],
-          ],
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
