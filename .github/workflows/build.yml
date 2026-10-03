@@ -66,6 +66,7 @@ jobs:
         if: always()
         with:
           name: startup-test-linux
+          retention-days: 1
           path: |
             yora-startup-linux.log
             yora-startup-linux.png
@@ -74,6 +75,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: yora-linux
+          retention-days: 1
           path: yora-linux-x64.tar.gz
 
   macos:
@@ -147,6 +149,7 @@ jobs:
         if: always()
         with:
           name: startup-test-macos
+          retention-days: 1
           path: |
             yora-startup.log
             yora-startup.png
@@ -155,6 +158,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: yora-macos
+          retention-days: 1
           path: yora-macos.zip
 
   windows:
@@ -223,11 +227,13 @@ jobs:
         if: always()
         with:
           name: startup-test-windows
+          retention-days: 1
           path: yora-startup-windows.png
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v7
         with:
           name: yora-windows
+          retention-days: 1
           path: yora-windows-setup.exe
 
   ios:
@@ -293,11 +299,13 @@ jobs:
         if: always()
         with:
           name: startup-test-ios
+          retention-days: 1
           path: yora-startup-ios.png
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v7
         with:
           name: yora-ios
+          retention-days: 1
           path: yora-ios.ipa
 
   android:
@@ -372,6 +380,7 @@ jobs:
         if: always()
         with:
           name: startup-test-android
+          retention-days: 1
           path: |
             yora-startup-android.png
             yora-startup-android.log
@@ -380,6 +389,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: yora-android
+          retention-days: 1
           path: yora-android.apk
 
   release:
