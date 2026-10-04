@@ -110,7 +110,7 @@ jobs:
       - name: Désinstalleur
         run: |
           APP=build/macos/Build/Products/Release/Yora.app
-          UNINSTALLER="Désinstaller Yora.app"
+          UNINSTALLER="Uninstall Yora.app"
           osacompile -o "$UNINSTALLER" macos/packaging/uninstaller.applescript
           cp macos/packaging/uninstall.sh "$UNINSTALLER/Contents/Resources/uninstall.sh"
           codesign --force --deep -s - "$UNINSTALLER"

@@ -1629,7 +1629,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   void _openMacUninstaller() {
     final contents = File(Platform.resolvedExecutable).parent.parent.path;
-    unawaited(Process.run('open', ['$contents/Resources/Désinstaller Yora.app']));
+    unawaited(Process.run('open', ['$contents/Resources/Uninstall Yora.app']));
   }
 
   Widget _wrapWithNativeMenuBar(Widget child) {
