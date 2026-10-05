@@ -6,7 +6,6 @@
 A free cross-platform music player that brings your local library and online music together in one place.<br>
 Search, stream, download and organize your music. No account, no ads, no server: everything stays on your device.
 
-<a href="https://www.patreon.com/cw/Challenge4"><img alt="Support me on Patreon" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/patreon-singular_vector.svg"></a>
 <a href="https://buymeacoffee.com/challenge4"><img alt="Buy me a coffee" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/buymeacoffee-singular_vector.svg"></a>
 <a href="https://ko-fi.com/challenge4"><img alt="Support me on Ko-fi" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg"></a>
 
@@ -69,6 +68,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-macos.zip">
         <img width="220" alt="Download for macOS" src="assets/branding/buttons/macos.svg">
       </a>
+      <p>If macOS says Yora is damaged, open Terminal and run:<br><code>find ~/Downloads ~/Desktop /Applications -maxdepth 3 -name "*Yora.app" -exec xattr -cr {} + 2>/dev/null</code></p>
     </td>
   </tr>
   <tr>
