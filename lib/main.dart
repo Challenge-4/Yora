@@ -23,6 +23,7 @@ import 'services/track_metadata_repair_service.dart';
 import 'services/discord_presence_service.dart';
 import 'services/media_hotkey_service.dart';
 import 'services/media_session_service.dart';
+import 'services/update_checker.dart';
 import 'services/android_media_store_service.dart';
 import 'models/repeat_mode.dart';
 import 'utils/window_geometry.dart';
@@ -483,6 +484,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     GestureBinding.instance.pointerRouter.addGlobalRoute(_handleGlobalPointerDownForMouseNavigation);
     _audioPlayer = Player(configuration: const PlayerConfiguration(title: 'Yora'));
     _initAudioListeners();
+    unawaited(_checkForUpdate());
     _loadSavedMedia().then((_) {
       _repairMissingOnlineTrackMetadata();
       _maybeAutoResumeLastSession();
@@ -1593,6 +1595,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
       );
 
   Widget _buildTopBar() => TopBar(
+        hasUpdate: _availableUpdate != null,
         searchBar: _buildSearchBar(),
         appMenu: _buildAppMenuButton(),
         profileImagePath: _profileImagePath,
@@ -2211,6 +2214,12 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   int _mobileTab = 0;
   bool _mobilePlayerOpen = false;
   final _nowPlayingDismissKey = GlobalKey<MobileSwipeDownDismissState>();
+  AvailableUpdate? _availableUpdate;
+
+  Future<void> _checkForUpdate() async {
+    final update = await checkForUpdate(appVersion);
+    if (mounted && update != null) setState(() => _availableUpdate = update);
+  }
   String? _mobileSearchAddPlaylist;
   List<YtSearchResult>? _mobileAddSuggestions;
   bool _mobileAddSuggestionsLoading = false;
@@ -2719,7 +2728,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
                         );
                       },
                     ),
-                  MobileBottomNav(index: _mobileTab, onSelect: _selectMobileTab),
+                  MobileBottomNav(index: _mobileTab, onSelect: _selectMobileTab, profileHasUpdate: _availableUpdate != null),
                 ],
               ],
             ),
@@ -2874,6 +2883,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   ProfileSettingsDialog _buildProfileSettings({Key? key}) => ProfileSettingsDialog(
         key: key,
+        availableUpdate: _availableUpdate,
         themeState: widget.themeState,
         generalSettings: widget.generalSettings,
         initialName: _profileName,

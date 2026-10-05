@@ -288,5 +288,6 @@
   "githubTooltip": "View on GitHub",
 
   "discordRichPresenceTitle": "Discord Rich Presence",
-  "discordRichPresenceSubtitle": "Shows the track you're currently listening to on your Discord profile. (Launch the app as administrator if the connection fails)"
+  "discordRichPresenceSubtitle": "Shows the track you're currently listening to on your Discord profile. (Launch the app as administrator if the connection fails)",
+  "newUpdateTitle": "New Update"
 }

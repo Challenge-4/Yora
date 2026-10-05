@@ -12,6 +12,7 @@ import '../utils/dominant_color_extractor.dart';
 import '../utils/data_backup.dart';
 import '../utils/platform_paths.dart';
 import '../services/android_media_store_service.dart';
+import '../services/update_checker.dart';
 import '../state/theme_state.dart';
 import '../state/general_settings_state.dart';
 import '../theme/app_palette.dart';
@@ -31,6 +32,7 @@ class ProfileSettingsDialog extends StatefulWidget {
   final Future<void> Function() onClearCache;
   final Future<void> Function(String name, String? imagePath, String? downloadDir, String? cacheDir) onSave;
   final Future<void> Function() onDataImported;
+  final AvailableUpdate? availableUpdate;
 
   const ProfileSettingsDialog({
     super.key,
@@ -45,6 +47,7 @@ class ProfileSettingsDialog extends StatefulWidget {
     required this.onClearCache,
     required this.onSave,
     required this.onDataImported,
+    this.availableUpdate,
   });
 
   @override
@@ -1156,7 +1159,39 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
                   ],
                 ),
               ),
+        if (widget.availableUpdate != null) ...[
+          const SizedBox(height: 20),
+          _buildUpdateCard(palette, l10n, widget.availableUpdate!),
+        ],
       ],
+    );
+  }
+
+  Widget _buildUpdateCard(AppPalette palette, AppLocalizations l10n, AvailableUpdate update) {
+    final themeState = AppTheme.of(context);
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 12, 12, 12),
+      decoration: BoxDecoration(color: palette.card, borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        children: [
+          Icon(Icons.system_update_alt, color: themeState.accent, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.newUpdateTitle, style: TextStyle(color: palette.textPrimary, fontSize: 16, fontWeight: FontWeight.bold)),
+                Text('v${update.version}', style: TextStyle(color: palette.textSecondary, fontSize: 13)),
+              ],
+            ),
+          ),
+          FilledButton(
+            onPressed: () => openLink(update.url),
+            style: FilledButton.styleFrom(backgroundColor: themeState.accent, foregroundColor: themeState.accentForeground),
+            child: Text(l10n.downloadButtonLabel),
+          ),
+        ],
+      ),
     );
   }
 
@@ -1388,6 +1423,11 @@ class ProfileSettingsDialogState extends State<ProfileSettingsDialog> {
                         ],
                       ),
               ),
+              if (widget.availableUpdate != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                  child: _buildUpdateCard(palette, l10n, widget.availableUpdate!),
+                ),
               const SizedBox(height: 20),
               Divider(color: palette.border, height: 1),
             ],

@@ -17,6 +17,7 @@ class TopBar extends StatelessWidget {
   final bool isWindowMaximized;
   final VoidCallback onHomeTap;
   final VoidCallback onShowProfile;
+  final bool hasUpdate;
 
   const TopBar({
     super.key,
@@ -26,6 +27,7 @@ class TopBar extends StatelessWidget {
     required this.isWindowMaximized,
     required this.onHomeTap,
     required this.onShowProfile,
+    this.hasUpdate = false,
   });
 
   Widget _buildGitHubButton(BuildContext context, AppPalette palette) {
@@ -103,13 +105,24 @@ class TopBar extends StatelessWidget {
                   onTap: onShowProfile,
                   mouseCursor: SystemMouseCursors.click,
                   hoverColor: palette.textPrimary.withValues(alpha: 0.15),
-                  child: CircleAvatar(
-                    radius: 16,
-                    backgroundColor: palette.inputBackground,
-                    backgroundImage: profileImagePath != null ? FileImage(File(profileImagePath!)) : null,
-                    child: profileImagePath == null
-                        ? Icon(Icons.person, color: palette.textSecondary, size: 18)
-                        : null,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      CircleAvatar(
+                        radius: 16,
+                        backgroundColor: palette.inputBackground,
+                        backgroundImage: profileImagePath != null ? FileImage(File(profileImagePath!)) : null,
+                        child: profileImagePath == null
+                            ? Icon(Icons.person, color: palette.textSecondary, size: 18)
+                            : null,
+                      ),
+                      if (hasUpdate)
+                        Positioned(
+                          right: -1,
+                          top: -1,
+                          child: UpdateDot(borderColor: palette.background),
+                        ),
+                    ],
                   ),
                 ),
                 const SizedBox(width: 20),
@@ -136,6 +149,25 @@ class TopBar extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class UpdateDot extends StatelessWidget {
+  final Color borderColor;
+
+  const UpdateDot({super.key, required this.borderColor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 10,
+      height: 10,
+      decoration: BoxDecoration(
+        color: AppTheme.of(context).accent,
+        shape: BoxShape.circle,
+        border: Border.all(color: borderColor, width: 1.5),
       ),
     );
   }

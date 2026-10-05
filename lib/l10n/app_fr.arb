@@ -455,5 +455,6 @@
   "githubTooltip": "Voir sur GitHub",
 
   "discordRichPresenceTitle": "Rich Presence Discord",
-  "discordRichPresenceSubtitle": "Affiche le titre en cours d'écoute sur ton profil Discord. (Lance l'application en administrateur si la connexion échoue)"
+  "discordRichPresenceSubtitle": "Affiche le titre en cours d'écoute sur ton profil Discord. (Lance l'application en administrateur si la connexion échoue)",
+  "newUpdateTitle": "Mise à jour disponible"
 }
