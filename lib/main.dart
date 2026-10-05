@@ -54,6 +54,7 @@ import 'widgets/mobile/mobile_mini_player.dart';
 import 'widgets/mobile/mobile_now_playing_page.dart';
 import 'widgets/mobile/mobile_playlist_view.dart';
 import 'widgets/mobile/mobile_search_view.dart';
+import 'widgets/mobile/mobile_swipe_down_dismiss.dart';
 import 'widgets/mobile/mobile_search_to_playlist_page.dart';
 import 'widgets/mobile/mobile_track_actions_sheet.dart';
 import 'widgets/search_result_row.dart';
@@ -2209,6 +2210,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   int _mobileTab = 0;
   bool _mobilePlayerOpen = false;
+  final _nowPlayingDismissKey = GlobalKey<MobileSwipeDownDismissState>();
   String? _mobileSearchAddPlaylist;
   List<YtSearchResult>? _mobileAddSuggestions;
   bool _mobileAddSuggestionsLoading = false;
@@ -2650,7 +2652,14 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
         toast: _toastMessage != null ? _buildAppToast() : null,
         playback: _playback,
         trackPresenter: _trackPresenter,
-        onClose: () => setState(() => _mobilePlayerOpen = false),
+        onClose: () {
+          final dismiss = _nowPlayingDismissKey.currentState;
+          if (dismiss != null) {
+            unawaited(dismiss.dismiss());
+          } else {
+            setState(() => _mobilePlayerOpen = false);
+          }
+        },
         onOpenQueue: _openMobileQueue,
         onOpenTrackMenu: () {
           final path = _playback.currentPlayingPath;
@@ -2717,9 +2726,13 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
           ),
           if (_mobilePlayerOpen && hasTrack)
             Positioned.fill(
-              child: ListenableBuilder(
-                listenable: _playback,
-                builder: (context, _) => _buildMobileNowPlayingPage(),
+              child: MobileSwipeDownDismiss(
+                key: _nowPlayingDismissKey,
+                onDismissed: () => setState(() => _mobilePlayerOpen = false),
+                child: ListenableBuilder(
+                  listenable: _playback,
+                  builder: (context, _) => _buildMobileNowPlayingPage(),
+                ),
               ),
             ),
           if (_mobileSearchAddPlaylist != null)
