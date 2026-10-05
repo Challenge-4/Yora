@@ -52,6 +52,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-windows-setup.exe">
         <img width="220" alt="Download for Windows" src="assets/branding/buttons/windows.svg">
       </a>
+      <p>If Windows shows "Windows protected your PC", click <b>More info</b>, then <b>Run anyway</b>.</p>
     </td>
   </tr>
   <tr>
@@ -60,6 +61,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-android.apk">
         <img width="220" alt="APK download" src="assets/branding/buttons/android-apk.png">
       </a>
+      <p>Open the APK and allow your browser or file manager to <b>install unknown apps</b> when asked.</p>
     </td>
   </tr>
   <tr>
