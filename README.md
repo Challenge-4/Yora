@@ -61,7 +61,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-android.apk">
         <img width="220" alt="APK download" src="assets/branding/buttons/android-apk.png">
       </a>
-      <p>Open the APK and allow your browser or file manager to <b>install unknown apps</b> when asked.</p>
+      <p>Open the APK and follow the steps Android shows you to allow installing apps from unknown sources.</p>
     </td>
   </tr>
   <tr>
