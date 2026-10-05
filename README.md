@@ -68,7 +68,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
       <a href="https://github.com/Challenge-4/Yora/releases/latest/download/yora-macos.zip">
         <img width="220" alt="Download for macOS" src="assets/branding/buttons/macos.svg">
       </a>
-      <p>If macOS says Yora is damaged, open Terminal and run:<br><code>find ~/Downloads ~/Desktop /Applications -maxdepth 3 -name "*Yora.app" -exec xattr -cr {} + 2>/dev/null</code></p>
+      <p>Download it to your Downloads folder, then drag the <b>Yora</b> folder into <b>Applications</b>.<br>If macOS says Yora is damaged, open Terminal and run:<br><code>find ~/Downloads ~/Desktop /Applications -maxdepth 3 -name "*Yora.app" -exec xattr -cr {} + 2>/dev/null</code></p>
     </td>
   </tr>
   <tr>
@@ -95,7 +95,7 @@ Search, stream, download and organize your music. No account, no ads, no server:
 
 Everything Yora needs is bundled with the app: there is nothing else to install.
 
-> The macOS, Linux and iOS versions are still experimental. If something goes wrong, please [open an issue](https://github.com/Challenge-4/Yora/issues).
+> If you run into a problem, please [open an issue](https://github.com/Challenge-4/Yora/issues).
 
 ## 💼 License
 
