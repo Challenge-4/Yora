@@ -66,7 +66,7 @@ class DiscordPresenceService {
       await rpc.setPresence(DiscordPresence(
         type: DiscordActivityType.listening,
         details: _clamp(title),
-        state: isPaused ? '$artist (en pause)' : _clamp(artist),
+        state: isPaused ? _clamp('$artist (paused)') : _clamp(artist),
         timestamps: timestamps,
         largeAsset: largeAsset,
       ));
