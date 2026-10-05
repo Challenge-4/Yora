@@ -15,7 +15,7 @@ img.Image _loadLogo(List<String> args) {
 
 img.Image _opaqueSquare(img.Image logo, int size, {double logoRatio = 0.72}) {
   final canvas = img.Image(width: size, height: size, numChannels: 3);
-  img.fill(canvas, color: img.ColorRgb8(255, 255, 255));
+  img.fill(canvas, color: img.ColorRgb8(18, 18, 18));
   final logoSize = (size * logoRatio).round();
   final scaled = img.copyResize(logo, width: logoSize, height: logoSize, interpolation: img.Interpolation.cubic);
   img.compositeImage(canvas, scaled, dstX: (size - logoSize) ~/ 2, dstY: (size - logoSize) ~/ 2);
@@ -25,7 +25,7 @@ img.Image _opaqueSquare(img.Image logo, int size, {double logoRatio = 0.72}) {
 img.Image _macosIcon(img.Image logo, int size) {
   const work = 1024;
   final canvas = img.Image(width: work, height: work, numChannels: 4);
-  img.fillRect(canvas, x1: 100, y1: 100, x2: 923, y2: 923, radius: 185, color: img.ColorRgba8(255, 255, 255, 255));
+  img.fillRect(canvas, x1: 100, y1: 100, x2: 923, y2: 923, radius: 185, color: img.ColorRgba8(18, 18, 18, 255));
   const logoSize = 600;
   final scaled = img.copyResize(logo, width: logoSize, height: logoSize, interpolation: img.Interpolation.cubic);
   img.compositeImage(canvas, scaled, dstX: (work - logoSize) ~/ 2, dstY: (work - logoSize) ~/ 2);
