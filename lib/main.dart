@@ -28,6 +28,7 @@ import 'services/android_media_store_service.dart';
 import 'models/repeat_mode.dart';
 import 'utils/window_geometry.dart';
 import 'utils/foreign_tracks.dart';
+import 'utils/cached_network_image.dart';
 import 'utils/platform_paths.dart';
 import 'utils/link_launcher.dart';
 import 'utils/network_status.dart';
@@ -484,6 +485,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     GestureBinding.instance.pointerRouter.addGlobalRoute(_handleGlobalPointerDownForMouseNavigation);
     _audioPlayer = Player(configuration: const PlayerConfiguration(title: 'Yora'));
     _initAudioListeners();
+    coverDirectoryResolver = () => _downloads.previewCacheDir.path;
     unawaited(_checkForUpdate());
     _loadSavedMedia().then((_) {
       _repairMissingOnlineTrackMetadata();
@@ -974,7 +976,22 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     unawaited(_rewarmMissingOnlineCaches());
   }
 
-  Future<void> _rewarmMissingOnlineCaches() async => _downloads.rewarmMissingOnlineCaches();
+  Future<void> _rewarmMissingOnlineCaches() async {
+    unawaited(_saveCoversForOffline());
+    await _downloads.rewarmMissingOnlineCaches();
+  }
+
+  Future<void> _saveCoversForOffline() async {
+    await deleteLegacyThumbnailFolder();
+    if (!await _downloads.networkAllowsDownloads()) return;
+    final urls = <String>[];
+    for (final path in _library.trackMetadata.keys) {
+      if (!isOnlineTrack(path)) continue;
+      final id = path.substring('online:'.length);
+      if (await _downloads.fullCacheFilePath(id).exists()) urls.add(_downloads.coverUrlFor(id));
+    }
+    await saveCovers(urls);
+  }
 
   Future<void> _saveMediaQueue = Future.value();
 

@@ -11,6 +11,7 @@ import '../services/metadata_tagger.dart';
 import '../services/android_media_store_service.dart';
 import '../utils/track_formatting.dart';
 import '../utils/platform_paths.dart';
+import '../utils/cached_network_image.dart';
 import '../l10n/generated/app_localizations.dart';
 
 class DownloadCacheController {
@@ -189,6 +190,7 @@ class DownloadCacheController {
       final id = path.substring('online:'.length);
       await deleteCachedPreviewSnippet(id);
       await deleteCachedFullPlaybackFile(id);
+      await deleteCoversFor(id);
     }
   }
 
@@ -197,7 +199,7 @@ class DownloadCacheController {
       await for (final entry in dir.list()) {
         if (entry is File) {
           final name = entry.uri.pathSegments.last;
-          if (name.startsWith(baseName) && !name.toLowerCase().endsWith('.${ytDlpService.audioExtension}')) {
+          if (name.startsWith(baseName) && !name.toLowerCase().endsWith('.${ytDlpService.audioExtension}') && !isCoverFileName(name)) {
             try {
               await entry.delete();
             } catch (_) {}
@@ -235,7 +237,13 @@ class DownloadCacheController {
     if (!await tempFile.exists()) {
       throw Exception('Échec du téléchargement de l\'aperçu.');
     }
+    unawaited(saveCover(coverUrlFor(youtubeVideoId)).catchError((_) {}));
     return tempFile;
+  }
+
+  String coverUrlFor(String youtubeVideoId) {
+    final url = library.trackMetadata['online:$youtubeVideoId']?['thumbnailUrl'];
+    return url != null && url.isNotEmpty ? url : 'https://img.youtube.com/vi/$youtubeVideoId/mqdefault.jpg';
   }
 
   static const previewClipDuration = Duration(seconds: 8);
