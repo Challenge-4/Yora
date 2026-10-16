@@ -15,6 +15,11 @@ import UIKit
     guard let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "YoraStorage") else { return }
     let channel = FlutterMethodChannel(name: "yora/ios", binaryMessenger: registrar.messenger())
     channel.setMethodCallHandler { call, result in
+      if call.method == "openUrl", let link = call.arguments as? String, let target = URL(string: link) {
+        UIApplication.shared.open(target)
+        result(true)
+        return
+      }
       guard call.method == "excludeFromBackup", let path = call.arguments as? String else {
         result(FlutterMethodNotImplemented)
         return

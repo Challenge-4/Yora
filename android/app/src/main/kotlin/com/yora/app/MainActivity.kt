@@ -195,6 +195,18 @@ class MainActivity : AudioServiceActivity() {
         }
     }
 
+    private fun openUrl(url: String): Boolean {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        return try {
+            startActivity(intent)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         channel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "yora/ytdlp")
@@ -243,6 +255,7 @@ class MainActivity : AudioServiceActivity() {
                     result.success(true)
                 }
                 "openMusicFolder" -> result.success(openMusicFolder(call.argument<String>("folder") ?: "Yora"))
+                "openUrl" -> result.success(openUrl(call.argument<String>("url") ?: ""))
                 "publishAudio" -> executor.execute {
                     try {
                         val sourcePath = call.argument<String>("sourcePath")!!

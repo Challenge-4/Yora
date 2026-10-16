@@ -14,6 +14,7 @@ const _checkedAtKey = 'updateCheckedAt';
 const _latestTagKey = 'latestReleaseTag';
 const _latestUrlKey = 'latestReleaseUrl';
 const _checkInterval = Duration(hours: 24);
+const _latestReleasePage = 'https://github.com/Challenge-4/Yora/releases/latest';
 
 List<int> _versionParts(String version) {
   final core = version.trim().replaceFirst(RegExp(r'^[vV]'), '').split(RegExp(r'[+-]')).first;
@@ -59,5 +60,5 @@ Future<AvailableUpdate?> checkForUpdate(String currentVersion) async {
     } catch (_) {}
   }
   if (tag == null || url == null || !isNewerVersion(tag, currentVersion)) return null;
-  return AvailableUpdate(tag.replaceFirst(RegExp(r'^[vV]'), ''), url);
+  return AvailableUpdate(tag.replaceFirst(RegExp(r'^[vV]'), ''), _latestReleasePage);
 }
