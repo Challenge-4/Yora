@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +13,9 @@ Future<void> initMobilePaths() async {
   final documents = await getApplicationDocumentsDirectory();
   if (Platform.isIOS) {
     _mobileDownloadsPath = joinPath([documents.path, 'Downloads']);
-    _mobileCachePath = joinPath([(await getApplicationCacheDirectory()).path, 'Yora']);
+    final iosCache = joinPath([(await getApplicationSupportDirectory()).path, 'Yora', 'Cache']);
+    _mobileCachePath = iosCache;
+    await _prepareIosCache(joinPath([(await getApplicationCacheDirectory()).path, 'Yora']), iosCache);
     _iosContainerPath = documents.parent.path;
     await relocateIosContainerPaths();
     return;
@@ -30,6 +33,27 @@ Future<void> initMobilePaths() async {
   _mobileCachePath = joinPath([external.path, 'Cache']);
   _legacyAndroidDownloadsPath = legacyDownloads;
   await _migrateLegacyAndroidStorage(legacyDownloads, legacyCache);
+}
+
+Future<void> _prepareIosCache(String legacyCache, String cache) async {
+  final cacheDir = Directory(cache);
+  await cacheDir.create(recursive: true);
+  final legacy = Directory(legacyCache);
+  if (await legacy.exists()) {
+    try {
+      await for (final entry in legacy.list(recursive: true)) {
+        if (entry is! File) continue;
+        final target = File(cache + entry.path.substring(legacyCache.length));
+        if (await target.exists()) continue;
+        await target.parent.create(recursive: true);
+        await entry.rename(target.path);
+      }
+      await legacy.delete(recursive: true);
+    } catch (_) {}
+  }
+  try {
+    await const MethodChannel('yora/ios').invokeMethod('excludeFromBackup', cache);
+  } catch (_) {}
 }
 
 String? _iosContainerPath;
