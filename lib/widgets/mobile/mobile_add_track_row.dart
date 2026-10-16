@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utils/cached_network_image.dart';
 import '../../services/yt_dlp_service.dart';
 import '../../theme/app_theme.dart';
 
@@ -49,7 +50,7 @@ class MobileAddTrackRow extends StatelessWidget {
                   children: [
                     video.thumbnailUrl.isEmpty
                         ? fallback()
-                        : Image.network(video.thumbnailUrl, fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback()),
+                        : Image(image: CachedNetworkImage(video.thumbnailUrl), fit: BoxFit.cover, errorBuilder: (_, _, _) => fallback()),
                     Container(color: Colors.black.withValues(alpha: 0.25)),
                     Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 30),
                   ],

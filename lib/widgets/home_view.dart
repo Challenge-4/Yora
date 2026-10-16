@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../utils/cached_network_image.dart';
 import '../presenters/track_presenter.dart';
 import '../state/library_state.dart';
 import '../theme/app_theme.dart';
@@ -250,8 +251,8 @@ class HomeView extends StatelessWidget {
               aspectRatio: 1,
               child: thumbnailUrl == null || thumbnailUrl.isEmpty
                   ? _fallbackArt(context)
-                  : Image.network(
-                      thumbnailUrl,
+                  : Image(
+                      image: CachedNetworkImage(thumbnailUrl),
                       fit: BoxFit.cover,
                       errorBuilder: (_, _, _) => _fallbackArt(context),
                     ),

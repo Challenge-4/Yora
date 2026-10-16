@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/cached_network_image.dart';
 import '../presenters/track_presenter.dart';
 import '../services/yt_dlp_service.dart';
 import '../state/playback_state.dart';
@@ -69,8 +70,8 @@ class SearchResultRow extends StatelessWidget {
                             color: themeState.accent.withValues(alpha: 0.3),
                             child: Icon(Icons.music_note, color: palette.textSecondary),
                           )
-                        : Image.network(
-                            video.thumbnailUrl,
+                        : Image(
+                            image: CachedNetworkImage(video.thumbnailUrl),
                             width: thumbSize,
                             height: thumbSize,
                             fit: BoxFit.cover,

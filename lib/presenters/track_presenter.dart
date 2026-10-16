@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../utils/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import '../state/library_state.dart';
 import '../state/playback_state.dart';
@@ -158,8 +159,8 @@ class TrackPresenter {
     if (thumbnailUrl != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(4),
-        child: Image.network(
-          thumbnailUrl,
+        child: Image(
+          image: CachedNetworkImage(thumbnailUrl),
           width: size,
           height: size,
           fit: BoxFit.cover,

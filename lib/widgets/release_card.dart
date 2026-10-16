@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/cached_network_image.dart';
 import '../services/charts_service.dart';
 import '../theme/app_theme.dart';
 
@@ -26,8 +27,8 @@ class ReleaseCard extends StatelessWidget {
               aspectRatio: 1,
               child: release.coverUrl == null
                   ? Container(color: palette.card)
-                  : Image.network(
-                      release.coverUrl!,
+                  : Image(
+                      image: CachedNetworkImage(release.coverUrl!),
                       fit: BoxFit.cover,
                       errorBuilder: (_, _, _) => Container(color: palette.card),
                     ),
