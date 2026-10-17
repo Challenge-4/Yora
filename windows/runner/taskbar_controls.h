@@ -19,7 +19,6 @@ class TaskbarControls {
                                           LPARAM lparam);
 
  private:
-  bool CenterRestoreOnMonitor();
   void HandleMethodCall(
       const flutter::MethodCall<flutter::EncodableValue>& call,
       std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result);

@@ -559,14 +559,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
 
   Future<void> _rememberMaximizedBounds() async {
     if (!_isWindowMaximized) return;
-    final bounds = await windowManager.getBounds();
-    if (bounds == _maximizedBounds) return;
-    _maximizedBounds = bounds;
-    if (Platform.isWindows) {
-      try {
-        await _taskbarChannel.invokeMethod('centerRestoreOnMonitor');
-      } catch (_) {}
-    }
+    _maximizedBounds = await windowManager.getBounds();
   }
 
   @override
@@ -581,10 +574,8 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     setState(() => _isWindowMaximized = false);
     final maximizedBounds = _maximizedBounds;
     unawaited(() async {
-      if (!Platform.isWindows) {
-        final area = await displayAreaContaining(maximizedBounds ?? await windowManager.getBounds());
-        await centerWindowOnDisplayArea(area);
-      }
+      final area = await displayAreaContaining(maximizedBounds ?? await windowManager.getBounds());
+      await centerWindowOnDisplayArea(area);
       await _saveWindowState();
     }());
   }
