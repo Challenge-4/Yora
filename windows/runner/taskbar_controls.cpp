@@ -3,6 +3,7 @@
 #include <commctrl.h>
 #include <strsafe.h>
 
+#include <algorithm>
 #include <string>
 
 #pragma comment(lib, "comctl32.lib")
@@ -50,6 +51,31 @@ TaskbarControls::TaskbarControls(HWND window,
       });
 }
 
+bool TaskbarControls::CenterRestoreOnMonitor() {
+  HWND root = ::GetAncestor(window_, GA_ROOT);
+  if (!root || !::IsWindowVisible(root) || !::IsZoomed(root)) return false;
+  WINDOWPLACEMENT placement{};
+  placement.length = sizeof(WINDOWPLACEMENT);
+  if (!::GetWindowPlacement(root, &placement)) return false;
+  MONITORINFO monitor{};
+  monitor.cbSize = sizeof(MONITORINFO);
+  if (!::GetMonitorInfo(::MonitorFromWindow(root, MONITOR_DEFAULTTONEAREST), &monitor)) return false;
+  MONITORINFO primary{};
+  primary.cbSize = sizeof(MONITORINFO);
+  if (!::GetMonitorInfo(::MonitorFromPoint(POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY), &primary)) return false;
+  const LONG offset_x = primary.rcWork.left - primary.rcMonitor.left;
+  const LONG offset_y = primary.rcWork.top - primary.rcMonitor.top;
+  const RECT& work = monitor.rcWork;
+  const LONG work_width = work.right - work.left;
+  const LONG work_height = work.bottom - work.top;
+  const LONG width = (std::min)(placement.rcNormalPosition.right - placement.rcNormalPosition.left, work_width);
+  const LONG height = (std::min)(placement.rcNormalPosition.bottom - placement.rcNormalPosition.top, work_height);
+  const LONG left = work.left + (work_width - width) / 2 - offset_x;
+  const LONG top = work.top + (work_height - height) / 2 - offset_y;
+  placement.rcNormalPosition = RECT{left, top, left + width, top + height};
+  return ::SetWindowPlacement(root, &placement) != 0;
+}
+
 TaskbarControls::~TaskbarControls() {
   if (taskbar_) {
     taskbar_->Release();
@@ -60,6 +86,10 @@ TaskbarControls::~TaskbarControls() {
 void TaskbarControls::HandleMethodCall(
     const flutter::MethodCall<flutter::EncodableValue>& call,
     std::unique_ptr<flutter::MethodResult<flutter::EncodableValue>> result) {
+  if (call.method_name().compare("centerRestoreOnMonitor") == 0) {
+    result->Success(flutter::EncodableValue(CenterRestoreOnMonitor()));
+    return;
+  }
   if (call.method_name().compare("setThumbnailToolbar") != 0) {
     result->NotImplemented();
     return;

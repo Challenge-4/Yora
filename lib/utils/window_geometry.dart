@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:window_manager/window_manager.dart';
 import 'package:screen_retriever/screen_retriever.dart';
@@ -53,4 +54,38 @@ Future<void> centerWindowOnPrimaryDisplay() async {
   final left = visiblePosition.dx + (visibleSize.width - bounds.width) / 2;
   final top = visiblePosition.dy + (visibleSize.height - bounds.height) / 2;
   await windowManager.setPosition(Offset(left, top));
+}
+
+Future<Rect?> displayAreaContaining(Rect bounds) async {
+  final displays = await screenRetriever.getAllDisplays();
+  Rect? best;
+  var bestOverlap = 0.0;
+  for (final display in displays) {
+    final size = display.visibleSize ?? display.size;
+    final position = display.visiblePosition ?? Offset.zero;
+    final area = Rect.fromLTWH(position.dx, position.dy, size.width, size.height);
+    final overlap = area.intersect(bounds);
+    final surface = overlap.width > 0 && overlap.height > 0 ? overlap.width * overlap.height : 0.0;
+    if (surface > bestOverlap) {
+      bestOverlap = surface;
+      best = area;
+    }
+  }
+  return best;
+}
+
+Future<void> centerWindowOnDisplayArea(Rect? area) async {
+  if (area == null) {
+    await centerWindowOnPrimaryDisplay();
+    return;
+  }
+  final bounds = await windowManager.getBounds();
+  final width = math.min(math.max(bounds.width, kMinWindowWidth), area.width);
+  final height = math.min(math.max(bounds.height, kMinWindowHeight), area.height);
+  await windowManager.setBounds(Rect.fromLTWH(
+    area.left + (area.width - width) / 2,
+    area.top + (area.height - height) / 2,
+    width,
+    height,
+  ));
 }

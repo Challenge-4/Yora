@@ -465,6 +465,7 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
     windowManager.addListener(this);
     windowManager.isMaximized().then((maximized) {
       if (mounted) setState(() => _isWindowMaximized = maximized);
+      unawaited(_rememberMaximizedBounds());
     });
     unawaited(_initSystemTray());
     unawaited(launchAtStartup.isEnabled().then((enabled) {
@@ -543,22 +544,47 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
   }
 
   @override
-  void onWindowResized() => unawaited(_saveWindowState());
+  void onWindowResized() {
+    unawaited(_rememberMaximizedBounds());
+    unawaited(_saveWindowState());
+  }
 
   @override
-  void onWindowMoved() => unawaited(_saveWindowState());
+  void onWindowMoved() {
+    unawaited(_rememberMaximizedBounds());
+    unawaited(_saveWindowState());
+  }
+
+  Rect? _maximizedBounds;
+
+  Future<void> _rememberMaximizedBounds() async {
+    if (!_isWindowMaximized) return;
+    final bounds = await windowManager.getBounds();
+    if (bounds == _maximizedBounds) return;
+    _maximizedBounds = bounds;
+    if (Platform.isWindows) {
+      try {
+        await _taskbarChannel.invokeMethod('centerRestoreOnMonitor');
+      } catch (_) {}
+    }
+  }
 
   @override
   void onWindowMaximize() {
     setState(() => _isWindowMaximized = true);
+    unawaited(_rememberMaximizedBounds());
     unawaited(_saveWindowState());
   }
 
   @override
   void onWindowUnmaximize() {
     setState(() => _isWindowMaximized = false);
+    final maximizedBounds = _maximizedBounds;
     unawaited(() async {
-      await centerWindowOnPrimaryDisplay();
+      if (!Platform.isWindows) {
+        final area = await displayAreaContaining(maximizedBounds ?? await windowManager.getBounds());
+        await centerWindowOnDisplayArea(area);
+      }
       await _saveWindowState();
     }());
   }
