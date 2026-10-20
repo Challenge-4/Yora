@@ -26,6 +26,7 @@ class TaskbarControls {
   HWND window_;
   ITaskbarList3* taskbar_ = nullptr;
   bool buttons_added_ = false;
+  UINT taskbar_button_created_ = 0;
   std::unique_ptr<flutter::MethodChannel<flutter::EncodableValue>> channel_;
 };
 

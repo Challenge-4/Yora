@@ -31,8 +31,10 @@ std::wstring Utf8ToUtf16(const std::string& utf8) {
 
 TaskbarControls::TaskbarControls(HWND window,
                                  flutter::BinaryMessenger* messenger)
-    : window_(window) {
+    : window_(window),
+      taskbar_button_created_(::RegisterWindowMessage(L"TaskbarButtonCreated")) {
   ::ChangeWindowMessageFilterEx(window_, WM_COMMAND, MSGFLT_ALLOW, nullptr);
+  ::ChangeWindowMessageFilterEx(window_, taskbar_button_created_, MSGFLT_ALLOW, nullptr);
 
   ::CoCreateInstance(CLSID_TaskbarList, nullptr, CLSCTX_INPROC_SERVER,
                      IID_PPV_ARGS(&taskbar_));
@@ -132,6 +134,11 @@ void TaskbarControls::HandleMethodCall(
 std::optional<LRESULT> TaskbarControls::HandleWindowProc(UINT message,
                                                           WPARAM wparam,
                                                           LPARAM lparam) {
+  if (taskbar_button_created_ != 0 && message == taskbar_button_created_) {
+    buttons_added_ = false;
+    channel_->InvokeMethod("taskbarButtonCreated", nullptr);
+    return std::nullopt;
+  }
   if (message == WM_COMMAND) {
     int button_id = LOWORD(wparam);
     if (button_id >= kMinButtonId &&

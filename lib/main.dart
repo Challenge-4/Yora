@@ -498,6 +498,10 @@ class _MainDashboardScreenState extends State<MainDashboardScreen> with WindowLi
       _navHistory[0] = restoredPlaylist != null ? _NavPlaylist(restoredPlaylist) : (_selectedIndex == 1 ? const _NavExplorer() : const _NavHome());
     });
     _taskbarChannel.setMethodCallHandler((call) async {
+      if (call.method == 'taskbarButtonCreated') {
+        if (mounted) _updateTaskbarThumbnailToolbar();
+        return;
+      }
       if (call.method != 'buttonClick') return;
       switch (call.arguments as int) {
         case 0:
